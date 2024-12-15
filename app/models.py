@@ -10,6 +10,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import re
 
+
 class CustomUser(AbstractUser):
     '''Модель пользователя'''
     balance = models.IntegerField(default=350, verbose_name='Баланс')
@@ -35,6 +36,27 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Currency(BaseModel):
+    '''Модель валюты'''
+    code = models.CharField(max_length=5, unique=True, verbose_name='Код валюты')
+    name = models.CharField(max_length=50, verbose_name='Название валюты')
+    logo = models.FileField(
+        upload_to='currency_logos/',
+        verbose_name='Лого валюты',
+        validators=[FileExtensionValidator(['svg', 'png', 'jpg', 'jpeg'])],
+        blank=True,
+        null=True
+    )
+
+    class Meta:
+        verbose_name = 'Валюта'
+        verbose_name_plural = 'Валюты'
+        ordering = ['code']
+
+    def __str__(self):
+        return self.name
 
 
 class Exchange(BaseModel):
@@ -179,6 +201,7 @@ class DeliveryExchange(BaseModel):
     template = models.ForeignKey(BaseDelivery, on_delete=models.PROTECT, null=False, blank=False, default=1, verbose_name='Вариант доставки')
     price = models.IntegerField(default=0, verbose_name='Стоимость доставки')
     delivery_time = models.IntegerField(default=0, verbose_name='Время доставки (час)')
+    currency_delivery = models.ForeignKey(Currency, on_delete=models.PROTECT, null=False, blank=False, default=1, verbose_name='Валюта доставки')
     description = models.TextField(max_length=200, verbose_name='Условия доставки')
     is_active = models.BooleanField(default=True, verbose_name='Активность', db_index=True)
 
@@ -205,27 +228,6 @@ class DeliveryExchange(BaseModel):
     def __str__(self):
         return self.template.name
     
-
-class Currency(BaseModel):
-    '''Модель валюты'''
-    code = models.CharField(max_length=5, unique=True, verbose_name='Код валюты')
-    name = models.CharField(max_length=50, verbose_name='Название валюты')
-    logo = models.FileField(
-        upload_to='currency_logos/',
-        verbose_name='Лого валюты',
-        validators=[FileExtensionValidator(['svg', 'png', 'jpg', 'jpeg'])],
-        blank=True,
-        null=True
-    )
-
-    class Meta:
-        verbose_name = 'Валюта'
-        verbose_name_plural = 'Валюты'
-        ordering = ['code']
-
-    def __str__(self):
-        return self.name
-
 
 class ExchangePair(BaseModel):
     '''Модель пары валют'''
