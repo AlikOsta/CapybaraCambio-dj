@@ -43,15 +43,23 @@ class DeliveryExchangeSerializer(serializers.ModelSerializer):
         fields = ['template', 'price', 'delivery_time', 'currency_delivery', 'description', 'is_active', ]
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['content', 'rating', 'created_at', 'author', 'telegram_id', 'is_active']
+
+
 class ExchangeSerializer(serializers.ModelSerializer):
     city = SubLocationSerializer()
     delivery = DeliveryExchangeSerializer(required=False, allow_null=True)
     
     verifications = VerificationExchangeSerializer(required=False, allow_null=True)
 
+    comments = CommentSerializer(many=True, required=False, allow_null=True)
+
     class Meta:
         model = Exchange
-        fields = ['city', 'name', 'url_operator', 'logo', 'description', 'rating', 'is_active',  'delivery', 'verifications',]
+        fields = ['city', 'name', 'url_operator', 'logo', 'description', 'rating', 'is_active',  'delivery', 'verifications', 'comments']
 
 
 class ExchangeNameSerializer(serializers.ModelSerializer):
@@ -59,8 +67,10 @@ class ExchangeNameSerializer(serializers.ModelSerializer):
         model = Exchange
         fields = ['name']
     
+
 class ExchangePairSerializer(serializers.ModelSerializer):
-    exchange = ExchangeSerializer()
+    # exchange = ExchangeSerializer() 
+    exchange = ExchangeNameSerializer()
     give_currency = CurrencySerializer()
     get_currency = CurrencySerializer()
 
