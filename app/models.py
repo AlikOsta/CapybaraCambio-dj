@@ -65,7 +65,7 @@ class Exchange(BaseModel):
     name = models.CharField(max_length=25, unique=True,  verbose_name='Название')
     url_operator = models.URLField(verbose_name="Ссылка на оператора")
     logo = models.ImageField(upload_to='exchange_logos/', default='exchange_logos/default_logo.png', verbose_name='Логотип обменника')
-    discription = models.TextField(max_length=150, verbose_name='Описание')
+    description = models.TextField(max_length=150, verbose_name='Описание')
     city =models.ForeignKey("SubLocation", null=False, blank=False, on_delete=models.PROTECT, verbose_name='Город', db_index=True)
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0, verbose_name='Рейтинг', db_index=True)
     is_active = models.BooleanField(default=True, verbose_name='Активность', db_index=True)
