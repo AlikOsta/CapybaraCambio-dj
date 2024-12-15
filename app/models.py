@@ -158,17 +158,15 @@ class VerificationExchange(BaseModel):
 
     def save(self, *args, **kwargs):
         """Сохранение объекта"""
-        if not self.pk:  # Выполняется только при создании нового объекта
+        if not self.pk: 
             self.is_active = True
 
-            # Устанавливаем expires_at если оно не задано
             if not self.expires_at:
                 if hasattr(self.template, 'days') and self.template.days is not None:
                     self.expires_at = timezone.now() + timezone.timedelta(days=self.template.days)
                 else:
                     raise ValueError("Шаблон не содержит корректного значения для 'days'")
 
-            # Проверка баланса владельца обменника
             if self.exchange.owner.balance >= self.template.price:
                 self.exchange.owner.balance -= self.template.price
                 self.exchange.owner.save()
@@ -244,7 +242,7 @@ class ExchangePair(BaseModel):
     give_rate = models.DecimalField(max_digits=10, default=0, decimal_places=2,  verbose_name='Курс обмена (отдая)')
     get_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='received_exchange_pairs', verbose_name='Валюта выдачи')
     get_rate = models.DecimalField(max_digits=10, default=0, decimal_places=2, verbose_name='Курс обмена (получаю)')
-    is_active = models.BooleanField(default=False, verbose_name='Активна', db_index=True) 
+    is_active = models.BooleanField(default=True, verbose_name='Активна', db_index=True) 
 
     class Meta:
         verbose_name = 'Валютная пара'

@@ -1,10 +1,10 @@
 from django.urls import path
-from . import views
+from .views import ExchangeListAPI, CurrencyCityListAPI, ExchangePairListAPI, ExchangeDetailAPI
 
-
-app_name = 'api'
 
 urlpatterns = [
-    path('v1/exchange_list/', views.ExchangeListAPI, name='exchange_list'),
-
+    path('v1/exchange/', ExchangeListAPI.as_view(), name='exchange-list'),
+    path('v1/exchange/<uuid:pk>/', ExchangeDetailAPI.as_view(), name='exchange-detail'),
+    path('v1/currency-city/', CurrencyCityListAPI.as_view(), name='currency-city-list'),
+    path('v1/exchange-pair/', ExchangePairListAPI.as_view(), name='exchange-pair-list'),
 ]
