@@ -1,0 +1,480 @@
+{% extends 'layout/basic.html' %} 
+{% load static %} 
+
+{% block static %}
+<link rel="stylesheet" href="{% static 'app/css/ex_selection.css' %}" />
+<link rel="stylesheet" href="{% static 'app/css/ex_detali.css' %}" />
+{% endblock %} 
+
+{% block content %}
+
+<section class="container">
+
+  <div class="mar_10_10">
+    <div class='exchange-box'>
+      <div class="exchange-info">
+        <div class="exchange-logo">
+
+          <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
+          {% if exchange.has_verified %}
+            <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
+          {% endif %}
+
+          <div class="rating">
+            <div class="stars-outer">
+                ★★★★★
+                <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
+                    ★★★★★
+                </div>
+            </div>
+            <span class="rating-number">({{ exchange.rating }})</span>
+          </div>
+        </div>
+
+        <div class="ex_detali">
+          <h2 class='ex_title'>{{ exchange.name }}</h2>
+          <p class="ex_description">Город: {{ exchange.city }}</p>
+        
+          <div>
+            {% if exchange.is_active %}
+            <span class='wr_is_active'>Активен:
+              <div class="is_active"></div>
+            </span>
+            {% else %}
+            <span class='wr_is_active'>Не активен:
+              <div class="no_active"></div>
+            </span>
+            {% endif%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section>  
+      <div id="modal-edit-exchange" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-edit-exchange" type="button" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
+                &times;
+            </button>
+            
+            <h2>Информация о {{ exchange.name }}</h2>
+
+          <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="exchange">
+              
+              <div class="">
+                  {{ exchange_form.name }}
+              </div>
+
+              
+              <div class="">
+                  {{ exchange_form.url_operator }}
+              </div>
+
+              
+              <div class="">
+                  {{ exchange_form.description }}
+              </div>
+
+              
+              <div class="">
+                  {{ exchange_form.city }}
+              </div>
+
+              
+              <div class=" file-upload">
+                <label for="id_logo" class="custom-file-label">
+                    <div class="image-preview" id="imagePreview">
+                        {% if exchange.logo %}
+                            <img src="{{ exchange.logo.url }}" alt="Текущий логотип" class="image-preview__image">
+                        {% endif %}
+                    </div>
+                    <span class="file-label-text">Ваш логотип</span>
+                </label>
+                <input type="file" name="logo" id="id_logo" class="hidden-file-input" accept="image/*">
+              </div>
+
+              <div class="form-group toggle-wrapper">
+                Работает :
+                <label class="switch">
+                  {{ exchange_form.is_active }}
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <p class="error"></p>
+
+              <button type="submit" class="btn btn-primary">Сохранить</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="mar_10_10">
+    <div class="tabs-container">
+      <div class="tabs">
+          <div class="tab active" data-content="currencies">Мои пары</div>
+          <div class="tab" data-content="comments">Отзывы</div>
+          <div class="tab-line"></div>
+      </div>
+      <div class="content " id="currencies-content">
+        {% for pair in exchange_pair %}
+
+        <div class="">
+          <div class='exchange-box' data-pair-id="{{ pair.id }}" onclick="openEditPairModal(this)">
+            <div class="exchange-info">
+              <div class="exchange-logo">
+                <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
+                {% if exchange.has_verified %}
+                  <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
+                {% endif %}
+                <div class="rating">
+                  <div class="stars-outer">
+                      ★★★★★
+                      <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
+                          ★★★★★
+                      </div>
+                  </div>
+                  <span class="rating-number">({{ exchange.rating }})</span>
+                </div>
+              </div>
+              <div class="wr_r_t">
+                <h2>{{ pair.exchange }}</h2>
+                <div class='wr_deliivery'>
+                  {% if exchange.has_active_delivery %}
+                    <P> {{ exchange.delivery.template.name }} <br> {{ exchange.delivery.price }} песо. ≈ {{ exchange.delivery.delivery_time }} час.</P>
+                    <img class="icon_delivery" src="{{ exchange.delivery.template.logo.url }}" alt="delivery Logo" />
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+  
+            <div><hr></div>
+
+            <div class='wr_rate_info '>
+              <div class="give_info">
+                <div class="">
+                  {{ pair.give_rate }}
+                </div>
+                <img id="" class="promo_logo" src="{{ pair.give_currency.logo.url }}" alt="">
+              </div>
+              <span>
+                <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M200-324.62v-70.76h560v70.76H200Zm0-240v-70.76h560v70.76H200Z"/></svg>
+              </span>
+              <div class="get_info">
+                <div class="">
+                  {{ pair.get_rate }}
+                </div>
+                <img id="" class="promo_logo" src="{{ pair.get_currency.logo.url }}" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% empty %}
+            <p>У вас нет пар обмена.</p>
+        {% endfor %}
+
+        
+        <!-- Добавить после существующих модальных окон -->
+        <div id="modal-edit-pair" class="modal-overlay">
+          <div class="modal-content">
+            <button id="close-edit-pair" type="button" class="close-btn" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
+            
+            <h2>Редактировать пару обмена</h2>
+            
+            <form method="post" enctype="multipart/form-data">
+
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="edit_pair">
+              <input type="hidden" name="pair_id" id="edit-pair-id">
+
+              <div class='wr_rate_info'>
+                <div class="give_info">
+                  <div class="">
+                    <input type="number" name="give_rate" id="edit-give-rate" step="0.01" required>
+                  </div>
+                  <img id="edit-give-logo" class="give_logo" src="" alt="">
+                </div>
+
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#FFFFFF"><path d="M200-324.62v-70.76h560v70.76H200Zm0-240v-70.76h560v70.76H200Z"/></svg>
+                </span>
+                
+                <div class="get_info">
+                  <div class="">
+                    <input type="number" name="get_rate" id="edit-get-rate" step="0.01" required>
+                  </div>
+                  <img id="edit-get-logo" class="get_logo" src="" alt="">
+                </div>
+              </div>
+
+              <p class="error"></p>
+              <button type="submit" class="btn">Сохранить</button>
+            </form>
+          </div>
+        </div>
+
+
+  
+        <button id="add-pair-btn" type="button" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="64px" viewBox="0 -960 960 960" width="64px" fill="#FFFFFF">
+            <path d="M466.08-300h30.77v-162.92H660v-30.77H496.85V-660h-30.77v166.31H300v30.77h166.08V-300Zm14.32 180q-75.18 0-140.29-28.34-65.12-28.34-114.25-77.42-49.13-49.08-77.49-114.21Q120-405.11 120-480.37q0-74.49 28.34-140.07 28.34-65.57 77.42-114.2 49.08-48.63 114.21-76.99Q405.11-840 480.37-840q74.49 0 140.07 28.34 65.57 28.34 114.2 76.92 48.63 48.58 76.99 114.26Q840-554.81 840-480.4q0 75.18-28.34 140.29-28.34 65.12-76.92 114.07-48.58 48.94-114.26 77.49Q554.81-120 480.4-120Zm.1-30.77q136.88 0 232.81-96.04 95.92-96.04 95.92-233.69 0-136.88-95.73-232.81-95.74-95.92-233.5-95.92-137.15 0-233.19 95.73-96.04 95.74-96.04 233.5 0 137.15 96.04 233.19 96.04 96.04 233.69 96.04ZM480-480Z"/></svg>
+        </button>
+      </div>
+  
+      <div class="content" id="comments-content" style="display: none;">
+        <div class="flex_gap_20">
+          {% for comment in comment %}
+            <div class='exchange-box '>
+              <p class='com_title'>{{ comment.author }} ({{ comment.rating }}/5)</p>
+              <div><hr></div>
+              <p class='com_text'>{{ comment.content }}</p>
+              <p class='com_date'>{{ comment.created_at }}</p>
+            </div>
+          {% empty %}
+              <p>У вас нет отзывов.</p>
+          {% endfor %}
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mar_10_10">
+    <div id="modal" class="modal-overlay">
+      <div class="modal-content">
+        
+        <button id="close-modal" type="button" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
+        <h2>Добавить пару</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+  
+          <div class="">
+            <select name="give_currency" id="give-select">
+              <option value="">Клиент отдает</option>
+              {% for template in give_currency_templates %}
+                <option value="{{ template.id }}" data-logo="{{ template.logo.url }}">
+                  {{ template.name }} - {{ template.code }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+  
+          <div class="">
+            <select name="get_currency" id="get-select">
+              <option value="">Клиент получает</option>
+              {% for template in get_currency_templates %}
+                <option value="{{ template.id }}" data-logo="{{ template.logo.url }}">
+                  {{ template.name }} - {{ template.code }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+  
+          <div class='wr_rate_info'>
+            <div class="give_info">
+              <div class="">
+                {{ form.give_rate }}
+              </div>
+              <img id="" class="give_logo" src="" alt="">
+            </div>
+  
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#FFFFFF">
+                <path d="M200-324.62v-70.76h560v70.76H200Zm0-240v-70.76h560v70.76H200Z"/>
+              </svg>
+            </span>
+            
+            <div class="get_info">
+              <div class="">
+                {{ form.get_rate }}
+              </div>
+              <img id="" class="get_logo" src="" alt="">
+            </div>
+          </div>
+  
+          <p class="error"></p>
+          <button type="submit" class="btn">ДОБАВИТЬ</button>
+        </form>
+      </div>
+    </div>
+  </div> 
+  
+  <div class="mar_10_10">  
+    <div class="modal-overlay" id="modal-verify">
+      <div class="modal-content">
+          <button id="close-modal-verify" type="button" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
+          <h2>Подключение сертификата</h2>
+          <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="verification">
+              
+              <div class="form-group">
+                <select name="template" id="verification-select">
+                    <option value="">Выберите тип верификации</option>
+                    {% for template in verification_templates %}
+                        <option value="{{ template.id }}" 
+                                data-price="{{ template.price }}"
+                                data-logo="{{ template.logo.url }}">
+                            {{ template.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                <img id="selected-logo" class="verification-logo" src="" alt="">
+              </div>
+  
+              <p>Стоимость: <span id="verification-price">0</span> coin</p>
+              <p class="error verify"></p>
+              <button type="submit" class="btn btn-primary btn-verify">Подключить</button>
+          </form>
+      </div>
+  </div>
+
+  <div id="modal-verify-info" class="modal-overlay">
+    <div class="modal-content">
+        <button id="close-verify-info" type="button" class="close-btn" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
+        
+        <h2>Ваша верификация</h2>
+        
+        <div class="verify-info-content">
+            <div class="verify-logo">
+                <img src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo">
+            </div>
+            <div class="verify-details">
+                <p><strong>Тип верификации:</strong> {{ exchange.verifications.template.name }}</p>
+                <p><strong>Дата активации:</strong> {{ exchange.verifications.activated_at|date:"d.m.Y" }}</p>
+                <p><strong>Действительна до:</strong> {{ exchange.verifications.expires_at|date:"d.m.Y" }}</p>
+                <p class="verify-status {% if exchange.verifications.is_active %}active{% else %}inactive{% endif %}">
+                    Статус: {% if exchange.verifications.is_active %}Активна{% else %}Неактивна{% endif %}
+                </p>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="">
+    <div class="delivery-info">
+      <div id="modal-edit-delivery" class="modal-overlay">
+        <div class="modal-content">
+          <button id="close-edit-delivery" type="button" class="close-btn" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
+          <h2>Ваша доставку</h2>
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="delivery">
+              <div class="">
+                {{ delivery_form.template }}
+              </div>
+              <div class="">
+                  {{ delivery_form.price }}
+              </div>
+              <div class="">
+                  {{ delivery_form.delivery_time }}
+              </div>
+              <div class="">
+                  {{ delivery_form.description }}
+              </div>
+              <p class="error delivery"></p>
+              <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </form>
+        </div>
+      </div>
+  </div>
+
+  <div class="">
+    <div id="modal-delivery" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal-delivery" type="button" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
+                &times;
+            </button>
+            <h2>Способ доставки</h2>
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="delivery">
+              <div class="">
+                <select name="template" id="verification-select" class="form-control">
+                  <option value="">Выберите вариант доставки</option>
+                  {% for template in delivery_templates %}
+                      <option value="{{ template.id }}">
+                          {{ template.name }}
+                      </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="">
+                  {{ delivery_form.price }}
+              </div>
+              <div class="">
+                  {{ delivery_form.delivery_time }}
+              </div>
+              <div class="">
+                  {{ delivery_form.description }}
+              </div>
+          
+              <p class="error delivery"></p>
+              <button type="submit" class="btn btn-primary">Подключить</button>
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
+
+</section>
+
+
+<nav class="bottom-nav">
+  
+  <a href="{% url 'app:ex_selection' %}" class="nav-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M286.69-240v-30.77H589q65.38 0 110.88-45.73t45.5-111.65q0-65.16-45.5-110.5Q654.38-584 589-584H259.38l123.24 123.23-22 22L200-599.38 360.62-760l22 22-123.24 123.23H588q78.08 0 133.12 54.39 55.03 54.38 55.03 132.23 0 77.84-55.03 133Q666.08-240 588-240H286.69Z"/></svg>
+  </a>
+  
+  {% if exchange.has_verified %}
+  <button class="nav-btn" id="show-verify-info-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
+      <path d="M280.15-268.92 82.31-466l22.23-22.23 175.61 174.85 27.7-27.7 22.23 22.23-49.93 49.93Zm200 0L283.08-466l22.23-22.23 174.84 174.85 375.54-374.77 22.23 21.46-397.77 397.77Zm-27.69-172.31-22.23-22.23 225.46-225.46 22.23 22.23-225.46 225.46Z"/>
+    </svg>
+  </button>
+  {% else %}
+    <button class="nav-btn" id="verify-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
+        <path d="M280.15-268.92 82.31-466l22.23-22.23 175.61 174.85 27.7-27.7 22.23 22.23-49.93 49.93Zm200 0L283.08-466l22.23-22.23 174.84 174.85 375.54-374.77 22.23 21.46-397.77 397.77Zm-27.69-172.31-22.23-22.23 225.46-225.46 22.23 22.23-225.46 225.46Z"/>
+      </svg>
+    </button>
+  {% endif %}
+
+  {% if exchange.has_active_delivery %}
+      <button class="nav-btn" id="edit-delivery-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
+          <path d="M295.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H111l6.85-30.77h90.46q9.61-26.46 33.42-43.12 23.81-16.65 53.65-16.65 29.85 0 53.66 16.65 23.81 16.66 34.19 43.12H582l91.23-398.23H226l.69-2.23Q229.38-744 238.85-752q9.46-8 22.77-8h450.46l-33.62 144.62h87.31l105.54 141.23-34.39 173.92h-46.15q1.92 41.31-25.96 70.77Q736.92-200 695.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H390.77q1.92 41.31-25.96 70.77Q336.92-200 295.38-200ZM634-425.38h196.54l7.54-41.47-87.7-117.77h-79.76L634-425.38Zm26.38-249.93 12.85-53.92L582-331l12.62-53.69 31.69-139.85 34.07-150.77ZM68.15-444.69l7.31-30.77h179.23l-7.31 30.77H68.15Zm80-139.85 7.31-30.77h219.23l-7.31 30.77H148.15Zm147.23 353.77q27.16 0 45.89-19.23T360-295.38q0-27.16-18.73-45.89T295.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Zm400 0q27.16 0 45.89-19.23T760-295.38q0-27.16-18.73-45.89T695.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Z"/>
+        </svg>
+      </button>
+  {% else %}
+      <button class="nav-btn" id="delivery-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
+          <path d="M295.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H111l6.85-30.77h90.46q9.61-26.46 33.42-43.12 23.81-16.65 53.65-16.65 29.85 0 53.66 16.65 23.81 16.66 34.19 43.12H582l91.23-398.23H226l.69-2.23Q229.38-744 238.85-752q9.46-8 22.77-8h450.46l-33.62 144.62h87.31l105.54 141.23-34.39 173.92h-46.15q1.92 41.31-25.96 70.77Q736.92-200 695.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H390.77q1.92 41.31-25.96 70.77Q336.92-200 295.38-200ZM634-425.38h196.54l7.54-41.47-87.7-117.77h-79.76L634-425.38Zm26.38-249.93 12.85-53.92L582-331l12.62-53.69 31.69-139.85 34.07-150.77ZM68.15-444.69l7.31-30.77h179.23l-7.31 30.77H68.15Zm80-139.85 7.31-30.77h219.23l-7.31 30.77H148.15Zm147.23 353.77q27.16 0 45.89-19.23T360-295.38q0-27.16-18.73-45.89T295.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Zm400 0q27.16 0 45.89-19.23T760-295.38q0-27.16-18.73-45.89T695.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Z"/>
+        </svg>
+      </button>
+  {% endif %}
+
+  <button class="nav-btn" id="edit-exchange-btn" type="button">
+    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
+      <path d="m413.38-120-16.15-114.46q-22.08-7-48.46-21.69-26.39-14.7-44.69-31.54l-105.7 47.84-66.84-118.61 94.15-69.77q-2-12.08-3.27-25.5t-1.27-25.5q0-11.31 1.27-24.73t3.27-27.81l-94.15-70.54 66.84-116.31 104.93 46.31q20.61-16.84 45.46-31.15 24.85-14.31 47.69-21.08L413.38-840h133.24l16.15 115.23q25.15 9.31 47.81 21.96 22.65 12.66 43.04 30.5l108.76-46.31 66.08 116.31-97.23 71.62q3.54 13.84 4.42 26.5.89 12.65.89 24.19 0 10.77-1.27 23.31t-4.04 27.92l96.46 70.31-66.84 118.61-107.23-48.61q-21.39 18.38-44.2 32.42-22.8 14.04-46.65 20.81L546.62-120H413.38Zm24.93-30.77h82.61L535.69-262q30.69-8 56.35-22.69 25.65-14.69 51.96-39.46l102.92 44.46 40-69.69L696-416.85q4-18.53 6.12-33.5 2.11-14.96 2.11-29.65 0-16.23-2-30.42-2-14.2-6.23-31.2l92.46-69-40-69.69-105.23 44.46q-19.15-21.38-49.69-40.03Q563-694.54 534.92-698l-13.23-111.23h-83.38l-12.46 110.46q-32.47 6.23-58.89 21.31-26.42 15.08-51.73 40.84l-103.69-43.69-40 69.69 90.92 66.7q-4.77 14.69-6.88 30.8-2.12 16.12-2.12 33.89 0 16.23 2.12 31.58 2.11 15.34 6.11 30.8l-90.15 67.47 40 69.69 102.92-43.69q24 24.76 50.81 39.46 26.81 14.69 59.81 22.69l13.23 110.46Zm39.38-233.85q40.16 0 67.77-27.61 27.62-27.62 27.62-67.77 0-40.15-27.62-67.77-27.61-27.61-67.77-27.61-39.38 0-67.38 27.61-28 27.62-28 67.77 0 40.15 28 67.77 28 27.61 67.38 27.61ZM480-480Z"/>
+    </svg>
+  </button>
+
+</nav>
+
+  
+{% endblock %} 
+
+{% block scripts %} 
+
+  
+<script src="{% static 'app/js/ex_detali.js' %}"></script>
+<script src="{% static 'app/js/getRate.js' %}"></script>
+
+
+{% endblock %}

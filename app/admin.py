@@ -49,18 +49,18 @@ class VerificationExchangeInline(admin.TabularInline):
 class DeliveryExchangeInline(admin.TabularInline):
     model = DeliveryExchange
     extra = 0
-    fields = ('parent_delivery', 'price', "currency_delivery", 'delivery_time', 'description', 'is_active')
+    fields = ('exchange', 'price', "currency_delivery", 'delivery_time', 'description', 'is_active')
 
 
 @admin.register(Exchange)
 class ExchangeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'rating', 'is_active', 'premium', 'city', 'has_verified', 'has_active_delivery')
+    list_display = ('name', 'owner', 'rating', 'is_active', 'city', 'has_verified', 'has_active_delivery')
     search_fields = ('name', 'owner__username', 'city__name')
-    list_filter = ('is_active', 'premium', 'city')
+    list_filter = ('is_active', 'city')
     readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         (None, {
-            'fields': ('owner', 'name', 'url_operator', 'logo', 'description', 'city', 'is_active', 'premium')
+            'fields': ('owner', 'name', 'url_operator', 'logo', 'description', 'city', 'is_active')
         }),
         
     )
@@ -83,10 +83,10 @@ class VerificationAdmin(admin.ModelAdmin):
 
 @admin.register(VerificationExchange)
 class VerificationExchangeAdmin(admin.ModelAdmin):
-    list_display = ('parent_verification', 'activated_at', 'expires_at', 'is_active')
+    list_display = ('exchange', 'activated_at', 'expires_at', 'is_active')
     list_filter = ('is_active',)
     readonly_fields = ('activated_at', 'expires_at')
-    search_fields = ('parent_verification__name',)
+    search_fields = ('exchange__name',)
 
 
 @admin.register(BaseDelivery)
@@ -97,9 +97,9 @@ class DeliveryAdmin(admin.ModelAdmin):
 
 @admin.register(DeliveryExchange)
 class DeliveryExchangeAdmin(admin.ModelAdmin):
-    list_display = ('parent_delivery', 'price', 'delivery_time', 'is_active')
+    list_display = ('exchange', 'price', 'delivery_time', 'is_active')
     list_filter = ('is_active',)
-    search_fields = ('parent_delivery__name', 'description')
+    search_fields = ('exchange__name', 'description')
 
 
 @admin.register(Currency)

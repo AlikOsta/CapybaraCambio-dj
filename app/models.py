@@ -78,7 +78,6 @@ class Exchange(BaseModel):
             models.Index(fields=['is_active']),
             models.Index(fields=['rating']),
             models.Index(fields=['city']),
-            models.Index(fields=['city']),
         ]
 
     def __str__(self):
@@ -141,9 +140,10 @@ class BaseVerification(BaseModel):
 
 class VerificationExchange(BaseModel):
     '''Модель верификации обменника'''
-    exchange = models.OneToOneField(Exchange, on_delete=models.PROTECT, verbose_name='Обменник')
+    exchange = models.OneToOneField(Exchange, on_delete=models.PROTECT, related_name='verifications', verbose_name='Обменник')
     template = models.ForeignKey(BaseVerification, on_delete=models.PROTECT, null=False, blank=False, default=1, verbose_name='Шаблон верификации')
     expires_at = models.DateTimeField(verbose_name='Дата окончания', db_index=True)
+    activated_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата подключения', db_index=True)
     is_active = models.BooleanField(default=True, verbose_name='Активность', db_index=True)
 
     class Meta:
@@ -197,7 +197,7 @@ class BaseDelivery(BaseModel):
 
 class DeliveryExchange(BaseModel):
     '''Модель доставки обменника'''
-    exchange = models.OneToOneField(Exchange, on_delete=models.PROTECT, verbose_name='Название обменника')
+    exchange = models.OneToOneField(Exchange, on_delete=models.PROTECT, related_name='delivery', verbose_name='Название обменника')
     template = models.ForeignKey(BaseDelivery, on_delete=models.PROTECT, null=False, blank=False, default=1, verbose_name='Вариант доставки')
     price = models.IntegerField(default=0, verbose_name='Стоимость доставки')
     delivery_time = models.IntegerField(default=0, verbose_name='Время доставки (час)')
@@ -231,10 +231,10 @@ class DeliveryExchange(BaseModel):
 
 class ExchangePair(BaseModel):
     '''Модель пары валют'''
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, verbose_name='Обменник')
-    give_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name='Валюта получения')
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, related_name='pairs', verbose_name='Обменник')
+    give_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='given_exchange_pairs', verbose_name='Валюта получения')
     give_rate = models.DecimalField(max_digits=10, default=0, decimal_places=2,  verbose_name='Курс обмена (отдая)')
-    get_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name='Валюта выдачи')
+    get_currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='received_exchange_pairs', verbose_name='Валюта выдачи')
     get_rate = models.DecimalField(max_digits=10, default=0, decimal_places=2, verbose_name='Курс обмена (получаю)')
     is_active = models.BooleanField(default=False, verbose_name='Активна', db_index=True) 
 
@@ -322,7 +322,7 @@ class SubLocation(Location):
 
 class Comment(BaseModel):
     '''Модель комментария'''
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, verbose_name='Обменник')
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, related_name='comments', verbose_name='Обменник')
     author = models.CharField(max_length=50, verbose_name='Автор') 
     telegram_id = models.CharField(max_length=30, verbose_name='ID Telegram', blank=True, null=True)
     content = models.TextField(verbose_name='Комментарий')
