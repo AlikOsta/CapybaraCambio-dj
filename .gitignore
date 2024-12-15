@@ -166,3 +166,4 @@ auth
 api
 0*_*.py
 *.svg
+*.gif

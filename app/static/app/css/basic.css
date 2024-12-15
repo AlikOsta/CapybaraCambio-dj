@@ -50,7 +50,8 @@ body {
   font-size: 24px;
   font-weight: bold;
   color: rgb(246, 255, 95);
-  margin-top: 5px
+  margin-top: 5px;
+  cursor: pointer;
 }
 
 .exchange-box {
