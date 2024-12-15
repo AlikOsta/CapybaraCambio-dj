@@ -1,4 +1,4 @@
-# handlers.py
+
 from .forms import VerificationForm, DeliveryForm, ExchangePairForm, ExchangeForm
 from .models import ExchangePair
 from django.core.exceptions import ValidationError
@@ -14,7 +14,7 @@ def handle_verification_form(request, exchange):
             verification = form.save(commit=False)
             verification.exchange = exchange
             verification.expires_at = timezone.now() + timezone.timedelta(days=verification.template.days)
-            
+
             if exchange.owner.balance >= verification.template.price:
                 exchange.owner.balance -= verification.template.price
                 exchange.owner.save()

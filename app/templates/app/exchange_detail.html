@@ -62,27 +62,18 @@
           <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <input type="hidden" name="form_type" value="exchange">
-              
               <div class="">
                   {{ exchange_form.name }}
-              </div>
-
-              
+              </div> 
               <div class="">
                   {{ exchange_form.url_operator }}
               </div>
-
-              
               <div class="">
                   {{ exchange_form.description }}
               </div>
-
-              
               <div class="">
                   {{ exchange_form.city }}
               </div>
-
-              
               <div class=" file-upload">
                 <label for="id_logo" class="custom-file-label">
                     <div class="image-preview" id="imagePreview">
@@ -144,7 +135,7 @@
                 <h2>{{ pair.exchange }}</h2>
                 <div class='wr_deliivery'>
                   {% if exchange.has_active_delivery %}
-                    <P> {{ exchange.delivery.template.name }} <br> {{ exchange.delivery.price }} песо. ≈ {{ exchange.delivery.delivery_time }} час.</P>
+                    <P> {{ exchange.delivery.template.name }} <br> {{ exchange.delivery.price }} {{ exchange.delivery.currency_delivery.code }} ≈ {{ exchange.delivery.delivery_time }} час.</P>
                     <img class="icon_delivery" src="{{ exchange.delivery.template.logo.url }}" alt="delivery Logo" />
                   {% endif %} 
                 </div>
@@ -177,8 +168,6 @@
             <p>У вас нет пар обмена.</p>
         {% endfor %}
 
-        
-        <!-- Добавить после существующих модальных окон -->
         <div id="modal-edit-pair" class="modal-overlay">
           <div class="modal-content">
             <button id="close-edit-pair" type="button" class="close-btn" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
@@ -216,8 +205,6 @@
             </form>
           </div>
         </div>
-
-
   
         <button id="add-pair-btn" type="button" class="btn">
           <svg xmlns="http://www.w3.org/2000/svg" height="64px" viewBox="0 -960 960 960" width="64px" fill="#FFFFFF">
@@ -429,7 +416,6 @@
   </div>
 
 </section>
-
 
 <nav class="bottom-nav">
   
