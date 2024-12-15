@@ -60,7 +60,7 @@ class DeliveryForm(forms.ModelForm):
             }),
             'price': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Введите стоимость в ARS',
+                'placeholder': 'Укажите стоимость',
                 'min': '0'
             }),
             'delivery_time': forms.NumberInput(attrs={

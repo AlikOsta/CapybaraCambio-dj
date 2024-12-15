@@ -4,6 +4,7 @@ from .models import ExchangePair
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 def handle_verification_form(request, exchange):
     """Обработка формы верификации"""
@@ -11,9 +12,17 @@ def handle_verification_form(request, exchange):
     if form.is_valid():
         try:
             verification = form.save(commit=False)
-            verification.parent_verification = exchange
-            verification.save()
-            return {'success': True}
+            verification.exchange = exchange
+            verification.expires_at = timezone.now() + timezone.timedelta(days=verification.template.days)
+            
+            if exchange.owner.balance >= verification.template.price:
+                exchange.owner.balance -= verification.template.price
+                exchange.owner.save()
+                verification.save()
+                return {'success': True}
+            else:
+                return {'success': False, 'error': 'Недостаточно средств'}
+                
         except ValidationError as e:
             return {'success': False, 'error': str(e)}
     return {'success': False, 'error': form.errors}
@@ -27,7 +36,7 @@ def handle_delivery_form(request, exchange):
     if form.is_valid():
         try:
             delivery = form.save(commit=False)
-            delivery.parent_delivery = exchange
+            delivery.exchange = exchange
             delivery.is_active = True
             delivery.save()
             return {'success': True}

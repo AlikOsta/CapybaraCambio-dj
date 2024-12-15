@@ -9,6 +9,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import re
+from django.utils.timezone import now, timedelta
 
 
 class CustomUser(AbstractUser):
@@ -125,7 +126,7 @@ class Exchange(BaseModel):
 class BaseVerification(BaseModel):
     '''Базовая модель верификации'''
     name = models.CharField(max_length=25, default='Верификация', unique=True, verbose_name='Название')
-    logo = models.ImageField(upload_to='verification_logos/', verbose_name='Логотип верификации')
+    logo = models.FileField(upload_to='verification_logos/', validators=[FileExtensionValidator(['svg', 'png', 'jpg', 'jpeg'])], verbose_name='Логотип верификации')
     price = models.IntegerField(default=0, verbose_name='Стоимость верификации')
     days = models.IntegerField(default=30, verbose_name='Количество дней')
 
@@ -157,16 +158,23 @@ class VerificationExchange(BaseModel):
 
     def save(self, *args, **kwargs):
         """Сохранение объекта"""
-        if not self.pk:
+        if not self.pk:  # Выполняется только при создании нового объекта
             self.is_active = True
+
+            # Устанавливаем expires_at если оно не задано
             if not self.expires_at:
-                self.expires_at = timezone.now() + timezone.timedelta(days=self.template.days)
+                if hasattr(self.template, 'days') and self.template.days is not None:
+                    self.expires_at = timezone.now() + timezone.timedelta(days=self.template.days)
+                else:
+                    raise ValueError("Шаблон не содержит корректного значения для 'days'")
+
+            # Проверка баланса владельца обменника
             if self.exchange.owner.balance >= self.template.price:
                 self.exchange.owner.balance -= self.template.price
                 self.exchange.owner.save()
             else:
-                raise ValueError('Недостаточно средств')
-            
+                raise ValueError('Недостаточно средств для выполнения верификации')
+
         super().save(*args, **kwargs)
 
     def check_expiration(self):
@@ -184,7 +192,7 @@ class VerificationExchange(BaseModel):
 class BaseDelivery(BaseModel):
     '''Базовая модель доставки'''
     name = models.CharField(max_length=25, default='Доставка', verbose_name='Название Доставки')
-    logo = models.ImageField(upload_to='delivery_logos/', verbose_name='Логотип доставки')
+    logo = models.FileField(upload_to='delivery_logos/', validators=[FileExtensionValidator(['svg', 'png', 'jpg', 'jpeg'])], verbose_name='Логотип доставки')
 
     class Meta:
         verbose_name = 'Шаблон доставки'
