@@ -5,6 +5,6 @@ from . import views
 app_name = 'api'
 
 urlpatterns = [
-    path('exchange_list/', views.exchange_list, name='exchange_list'),
+    path('v1/exchange_list/', views.ExchangeListAPI, name='exchange_list'),
 
 ]
