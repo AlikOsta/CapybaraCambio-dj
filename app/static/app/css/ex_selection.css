@@ -186,7 +186,7 @@ a {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #229ED9;
+  background-color: #229ED9; 
   color: white;
   padding: 12px 24px;
   border-radius: 30px;
@@ -219,6 +219,7 @@ a {
   overflow: hidden;
   color: #f6ff5f;
 }
+
 
 input[type="text"], input[type="password"], input[type="number"] {
   font-family: "Montserrat Alternates", sans-serif;

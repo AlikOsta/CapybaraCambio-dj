@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (action === "open") {
       modal.classList.add("show");
       modalContent.classList.add("show");
-    } else {
+    } else { 
       modal.classList.remove("show");
       modalContent.classList.remove("show");
     }
@@ -111,4 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   updateButtonState();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const ratings = document.querySelectorAll('.rating');
+  
+  ratings.forEach(rating => {
+    const ratingValue = parseFloat(rating.querySelector('.rating-number').textContent.replace(/[()]/g, ''));
+    const starsInner = rating.querySelector('.stars-inner');
+    if (ratingValue >= 0 && ratingValue <= 5) {
+      const widthPercentage = (ratingValue / 5) * 100;
+      starsInner.style.width = `${widthPercentage}%`;
+    }
+  });
 });

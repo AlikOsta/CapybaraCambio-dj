@@ -50,6 +50,23 @@ def handle_exchange_pair_form(request, exchange):
     if form.is_valid():
         give_currency = form.cleaned_data['give_currency']
         get_currency = form.cleaned_data['get_currency']
+        
+        best_rate = ExchangePair.objects.filter(
+            give_currency=give_currency,
+            get_currency=get_currency,
+            is_active=True
+        ).order_by('-get_rate', 'give_rate').first()
+
+        if best_rate:
+            return {
+                'success': True,
+                'best_rate': {
+                    'give_rate': best_rate.give_rate,
+                    'get_rate': best_rate.get_rate,
+                    'exchange_name': best_rate.exchange.name
+                }
+            }
+        
         if ExchangePair.objects.filter(exchange=exchange, give_currency=give_currency, get_currency=get_currency).exists():
             return {'success': False, 'error': 'Такая валютная пара уже существует.'}
         try:
@@ -60,7 +77,6 @@ def handle_exchange_pair_form(request, exchange):
         except ValidationError as e:
             return {'success': False, 'error': str(e)}
     return {'success': False, 'error': 'Форма заполнена неверно'}
-
 def handle_exchange_edit_form(request, exchange):
     """Обработка формы редактирования обменника"""
     form = ExchangeForm(request.POST, request.FILES, instance=exchange)
@@ -102,3 +118,26 @@ def handle_form(request, form_type, exchange):
     if handler:
         return handler(request, exchange)
     return {'success': False, 'error': f'Неизвестный тип формы: {form_type}'}
+
+def handle_check_rate(request, exchange):
+    give_currency_id = request.POST.get('give_currency')
+    get_currency_id = request.POST.get('get_currency')
+    
+    best_rate = ExchangePair.objects.filter(
+        give_currency_id=give_currency_id,
+        get_currency_id=get_currency_id,
+        is_active=True
+    ).order_by('-get_rate', 'give_rate').first()
+
+    if best_rate:
+        return {
+            'success': True,
+            'best_rate': {
+                'give_rate': str(best_rate.give_rate),
+                'get_rate': str(best_rate.get_rate),
+                'exchange_name': best_rate.exchange.name
+            }
+        }
+    return {'success': False}
+
+FORM_HANDLERS['check_rate'] = handle_check_rate

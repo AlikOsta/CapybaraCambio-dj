@@ -177,6 +177,10 @@
     margin: 5px;
     color: #808080;
     text-align: right;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -327,3 +331,57 @@ input:checked + .slider:before {
     margin-top: 10px;
 }
 
+.wr_info_text_rate{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.best-rate-info {
+
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .best-rate-info h4 {
+    font-size: 20px;
+    margin: 0 0 10px 0;
+  }
+  
+  .best-rate-details {
+    background-color: #1c1c1c;
+    border: 2px solid #464545;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .best-rate-details p {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .best-rate-values {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 18px;
+    height: 55px;
+  }
+  
+  .best-rate-exchange {
+    color: rgb(246, 255, 95);
+    font-weight: bold;
+  }
+  
+.modal-content .give_logo,
+.modal-content .get_logo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-left: 10px;
+}

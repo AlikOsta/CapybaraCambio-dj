@@ -46,6 +46,9 @@
             </span>
             {% endif%}
           </div>
+          <div class="">
+            <p class="com_date">Работает с {{ exchange.updated_at|date:"d.m.Y" }} </p>
+          </div>
         </div>
       </div>
     </div>
@@ -111,58 +114,72 @@
           <div class="tab-line"></div>
       </div>
       <div class="content " id="currencies-content">
-        {% for pair in exchange_pair %}
+        {% for pair in exchange_pair %} 
 
-        <div class="">
-          <div class='exchange-box' data-pair-id="{{ pair.id }}" onclick="openEditPairModal(this)">
-            <div class="exchange-info">
-              <div class="exchange-logo">
-                <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
-                {% if exchange.has_verified %}
-                  <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
-                {% endif %}
-                <div class="rating">
-                  <div class="stars-outer">
-                      ★★★★★
-                      <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
-                          ★★★★★
-                      </div>
+          <div class="">
+            <div class='exchange-box' data-pair-id="{{ pair.id }}" onclick="openEditPairModal(this)">
+              <div class="exchange-info">
+                <div class="exchange-logo">
+                  <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
+                  {% if exchange.has_verified %}
+                    <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
+                  {% endif %}
+                  <div class="rating">
+                    <div class="stars-outer">
+                        ★★★★★
+                        <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
+                            ★★★★★
+                        </div>
+                    </div>
+                    <span class="rating-number">({{ exchange.rating }})</span>
                   </div>
-                  <span class="rating-number">({{ exchange.rating }})</span>
+                </div>
+                <div class="wr_r_t">
+                  <h2>{{ pair.exchange }}</h2>
+                  <div class='wr_deliivery'>
+                    {% if exchange.has_active_delivery %}
+                      <P> {{ exchange.delivery.template.name }} <br> {{ exchange.delivery.price }} {{ exchange.delivery.currency_delivery.code }} ≈ {{ exchange.delivery.delivery_time }} час.</P>
+                      <img class="icon_delivery" src="{{ exchange.delivery.template.logo.url }}" alt="delivery Logo" />
+                    {% endif %} 
+                  </div>
                 </div>
               </div>
-              <div class="wr_r_t">
-                <h2>{{ pair.exchange }}</h2>
-                <div class='wr_deliivery'>
-                  {% if exchange.has_active_delivery %}
-                    <P> {{ exchange.delivery.template.name }} <br> {{ exchange.delivery.price }} {{ exchange.delivery.currency_delivery.code }} ≈ {{ exchange.delivery.delivery_time }} час.</P>
-                    <img class="icon_delivery" src="{{ exchange.delivery.template.logo.url }}" alt="delivery Logo" />
-                  {% endif %} 
-                </div>
-              </div>
-            </div>
-  
-            <div><hr></div>
+    
+              <div><hr></div>
 
-            <div class='wr_rate_info '>
-              <div class="give_info">
-                <div class="">
-                  {{ pair.give_rate }}
+              <div class='wr_rate_info '>
+                <div class="give_info">
+                  <div class="">
+                    {{ pair.give_rate }}
+                  </div>
+                  <img id="" class="promo_logo" src="{{ pair.give_currency.logo.url }}" alt="">
                 </div>
-                <img id="" class="promo_logo" src="{{ pair.give_currency.logo.url }}" alt="">
-              </div>
-              <span>
-                <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M200-324.62v-70.76h560v70.76H200Zm0-240v-70.76h560v70.76H200Z"/></svg>
-              </span>
-              <div class="get_info">
-                <div class="">
-                  {{ pair.get_rate }}
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M200-324.62v-70.76h560v70.76H200Zm0-240v-70.76h560v70.76H200Z"/></svg>
+                </span>
+                <div class="get_info">
+                  <div class="">
+                    {{ pair.get_rate }}
+                  </div>
+                  <img id="" class="promo_logo" src="{{ pair.get_currency.logo.url }}" alt="">
                 </div>
-                <img id="" class="promo_logo" src="{{ pair.get_currency.logo.url }}" alt="">
               </div>
+                <div class="wr_info_text_rate">
+                  <div>
+                    {% if pair.is_active %}
+                    <span class='com_date'>Активен:
+                      <div class="is_active"></div>
+                    </span>
+                    {% else %}
+                    <span class='com_date'>Не активен:
+                      <div class="no_active"></div>
+                    </span>
+                    {% endif%}
+                  </div>
+                  <p class="com_date">Обновлено: {{pair.updated_at|date:"d.m.Y"}} </p>
+                </div>
             </div>
           </div>
-        </div>
 
         {% empty %}
             <p>У вас нет пар обмена.</p>
@@ -173,14 +190,16 @@
             <button id="close-edit-pair" type="button" class="close-btn" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">&times;</button>
             
             <h2>Редактировать пару обмена</h2>
+
             
             <form method="post" enctype="multipart/form-data">
-
               {% csrf_token %}
+
               <input type="hidden" name="form_type" value="edit_pair">
               <input type="hidden" name="pair_id" id="edit-pair-id">
 
               <div class='wr_rate_info'>
+
                 <div class="give_info">
                   <div class="">
                     <input type="number" name="give_rate" id="edit-give-rate" step="0.01" required>
@@ -198,11 +217,14 @@
                   </div>
                   <img id="edit-get-logo" class="get_logo" src="" alt="">
                 </div>
+
               </div>
 
               <p class="error"></p>
               <button type="submit" class="btn">Сохранить</button>
+
             </form>
+
           </div>
         </div>
   
@@ -239,7 +261,7 @@
           {% csrf_token %}
   
           <div class="">
-            <select name="give_currency" id="give-select">
+            <select name="give_currency" id="give-select" onchange="checkBestRate()">
               <option value="">Клиент отдает</option>
               {% for template in give_currency_templates %}
                 <option value="{{ template.id }}" data-logo="{{ template.logo.url }}">
@@ -250,7 +272,7 @@
           </div>
   
           <div class="">
-            <select name="get_currency" id="get-select">
+            <select name="get_currency" id="get-select" onchange="checkBestRate()">
               <option value="">Клиент получает</option>
               {% for template in get_currency_templates %}
                 <option value="{{ template.id }}" data-logo="{{ template.logo.url }}">
@@ -259,7 +281,19 @@
               {% endfor %}
             </select>
           </div>
-  
+
+          <div class="best-rate-info">
+            <h4>Лучшее предложение от: <span class="best-rate-exchange"></span></h4>
+            <div class="best-rate-details">
+              <div class="best-rate-values">
+                <span class="best-give-rate"></span>
+                <span>→</span>
+                <span class="best-get-rate"></span>
+              </div>
+            </div>
+          </div>
+
+
           <div class='wr_rate_info'>
             <div class="give_info">
               <div class="">

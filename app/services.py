@@ -12,4 +12,4 @@ def get_active_comments(exchange):
 
 def get_exchange_pairs(exchange):
     """Получить валютные пары для обменника"""
-    return ExchangePair.objects.filter(exchange=exchange)
+    return ExchangePair.objects.filter(exchange=exchange).order_by('-is_active')

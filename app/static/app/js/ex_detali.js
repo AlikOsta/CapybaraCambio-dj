@@ -41,7 +41,7 @@ class ModalHandler {
       }
   }
 
-  closeModal() {
+  closeModal() {    
       this.modal.classList.remove("show");
       this.modalContent.classList.remove("show");
       if (this.form) {
@@ -50,6 +50,13 @@ class ModalHandler {
       }
       if (this.errorMessage) {
           this.errorMessage.innerHTML = "";
+      }
+
+      const bestRateInfo = document.querySelector('.best-rate-info');
+      if (bestRateInfo) {
+          bestRateInfo.querySelector('.best-rate-exchange').textContent = '';
+          bestRateInfo.querySelector('.best-give-rate').textContent = '';
+          bestRateInfo.querySelector('.best-get-rate').textContent = '';
       }
   }
 
@@ -77,9 +84,9 @@ class ModalHandler {
         const data = await response.json();
 
         if (data.success) {
-            this.closeModal();
-            location.reload();
-        } else {
+          this.closeModal();
+          location.reload();
+      } else {
             let errorDetails = "Неизвестная ошибка.";
             if (data.error) {
                 if (data.error["__all__"]) {
@@ -262,22 +269,24 @@ document.getElementById('get-select').addEventListener('change', function() {
 
 
 function openEditPairModal(element) {
-    const pairId = element.getAttribute('data-pair-id');
-    const giveRate = element.querySelector('.give_info div').textContent.trim();
-    const getRate = element.querySelector('.get_info div').textContent.trim();
-    const giveLogo = element.querySelector('.give_info img').src;
-    const getLogo = element.querySelector('.get_info img').src;
+  const pairId = element.dataset.pairId;
+  const giveRate = element.dataset.giveRate;
+  const getRate = element.dataset.getRate;
+  const giveLogo = element.querySelector('.give_info img').src;
+  const getLogo = element.querySelector('.get_info img').src;
 
-    document.getElementById('edit-pair-id').value = pairId;
-    document.getElementById('edit-give-rate').value = giveRate;
-    document.getElementById('edit-get-rate').value = getRate;
-    document.getElementById('edit-give-logo').src = giveLogo;
-    document.getElementById('edit-get-logo').src = getLogo;
+  document.getElementById('edit-pair-id').value = pairId;
+  document.getElementById('edit-give-rate').value = giveRate;
+  document.getElementById('edit-get-rate').value = getRate;
+  document.getElementById('edit-give-logo').src = giveLogo;
+  document.getElementById('edit-get-logo').src = getLogo;
 
-    const modal = document.getElementById('modal-edit-pair');
-    modal.classList.add('show');
-    modal.querySelector('.modal-content').classList.add('show');
+  const modal = document.getElementById('modal-edit-pair');
+  modal.classList.add('show');
+  modal.querySelector('.modal-content').classList.add('show');
 }
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -288,3 +297,51 @@ document.addEventListener("DOMContentLoaded", () => {
         new ModalHandler("modal-edit-pair", null, "close-edit-pair");
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const ratings = document.querySelectorAll('.rating');
+  
+  ratings.forEach(rating => {
+    const ratingValue = parseFloat(rating.querySelector('.rating-number').textContent.replace(/[()]/g, ''));
+    const starsInner = rating.querySelector('.stars-inner');
+    if (ratingValue >= 0 && ratingValue <= 5) {
+      const widthPercentage = (ratingValue / 5) * 100;
+      starsInner.style.width = `${widthPercentage}%`;
+    }
+  });
+});
+
+
+async function checkBestRate() {
+  const giveCurrency = document.getElementById('give-select').value;
+  const getCurrency = document.getElementById('get-select').value;
+
+  if (giveCurrency && getCurrency) {
+      const formData = new FormData();
+      formData.append('give_currency', giveCurrency);
+      formData.append('get_currency', getCurrency);
+      formData.append('form_type', 'check_rate');
+
+      try {
+          const response = await fetch(window.location.href, {
+              method: 'POST',
+              headers: {
+                  'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+              },
+              body: formData
+          });
+
+          const data = await response.json();
+          if (data.best_rate) {
+              const bestRateInfo = document.querySelector('.best-rate-info');
+              bestRateInfo.querySelector('.best-rate-exchange').textContent = data.best_rate.exchange_name;
+              bestRateInfo.querySelector('.best-give-rate').textContent = data.best_rate.give_rate;
+              bestRateInfo.querySelector('.best-get-rate').textContent = data.best_rate.get_rate;
+          }
+      } catch (error) {
+          console.error('Ошибка при получении лучшего курса:', error);
+      }
+  }
+}
+
