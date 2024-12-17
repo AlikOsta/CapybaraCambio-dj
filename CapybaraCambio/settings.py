@@ -131,8 +131,6 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 
-STATIC_URL = 'static/'
-
 AUTH_USER_MODEL = 'app.CustomUser'
 
 LOGIN_URL = 'app:login'
@@ -141,3 +139,9 @@ LOGIN_REDIRECT_URL = 'app:ex_selection'
 
 LOGOUT_REDIRECT_URL = 'app:login'
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer', 
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+}

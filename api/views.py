@@ -7,10 +7,6 @@ from .serializers import ExchangeSerializer, SubLocationSerializer, CurrencySeri
 from rest_framework.response import Response
 
 
-class ExchangeListAPI(ListAPIView):
-    queryset = Exchange.objects.select_related('city', 'delivery__currency_delivery', 'delivery__template')
-    serializer_class = ExchangeSerializer
-
 class CurrencyCityListAPI(APIView):
     def get(self, request, *args, **kwargs):
         currency = Currency.objects.all()
@@ -27,5 +23,10 @@ class ExchangePairListAPI(APIView):
 
 
 class ExchangeDetailAPI(RetrieveAPIView):
+    queryset = Exchange.objects.select_related('city', 'delivery__currency_delivery', 'delivery__template')
+    serializer_class = ExchangeSerializer
+
+
+class ExchangeListAPI(ListAPIView):
     queryset = Exchange.objects.select_related('city', 'delivery__currency_delivery', 'delivery__template')
     serializer_class = ExchangeSerializer
