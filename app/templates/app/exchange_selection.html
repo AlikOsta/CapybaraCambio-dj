@@ -1,30 +1,29 @@
 {% extends 'layout/basic.html' %} 
 {% load static %} 
+
 {% block static %}
 <link rel="stylesheet" href="{% static 'app/css/ex_selection.css' %}" />
 {% endblock %}
 
 {% block content %}
-<section class="container">
+<main class="container-fluid py-3">
+  <!-- Компоненты с улучшенной семантикой -->
 
-  <!-- HEADER INCLUDE -->
-  {% include 'app/include/menu_select_include.html' %}
-  <!-- END HEADER INCLUDE -->
+  <section class="exchange-cards my-4">
+    {% include 'app/includes/card_exchange_include.html' %}
+  </section>
 
-  <!-- EXCHANGE CARDS INCLUDE -->
-  {% include 'app/include/card_exchange_include.html' %}
-  <!-- END EXCHANGE CARDS INCLUDE -->
+  {% comment %} <nav class="action-buttons">
+    {% include 'app/includes/add_btn_include.html' %}
+  </nav> {% endcomment %}
 
-  <!-- ADD BUTTON INCLUDE -->
-  {% include 'app/include/add_btn_include.html' %}
-  <!-- END ADD BUTTON INCLUDE -->
- 
-  <!-- MODALS INCLUDE -->
-  {% include 'app/include/modals_add_exchange_include.html' %}
-  <!-- END MODALS INCLUDE -->
+  <nav>
+    {% include 'app/includes/menu_select_include.html' %}
+  </nav>
 
-</section>
-
+  <!-- Модальные окна -->
+  {% include 'app/includes/modals_add_exchange_include.html' %}
+</main>
 {% endblock %}
 
 {% block scripts %}

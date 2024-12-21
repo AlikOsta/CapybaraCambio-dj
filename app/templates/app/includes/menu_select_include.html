@@ -1,36 +1,37 @@
-<div class='wr_btn_top mar_10_10'>
-    <button type="submit" id="add_balanse" class="btn_balanse">
-      <div class='wr_balance'>
-        <span class='text_balance'>{{user.balance}}</span>   
-        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M466.08-297.08h30.77v-42.69h52.61q12.79 0 20.7-8.92 7.92-8.93 7.92-20.59v-96.8q0-12.92-7.92-21.73-7.91-8.81-20.7-8.81h-136v-92.84h164.62v-30.77h-81.23v-42.69h-30.77v42.69h-53.62q-11.92 0-20.84 8.92-8.93 8.93-8.93 21.71v95.82q0 12.78 8.93 20.36 8.92 7.57 20.84 7.57h134.85v95.31H382.69v30.77h83.39v42.69ZM175.38-200q-23.05 0-39.22-16.16Q120-232.33 120-255.38v-449.24q0-23.05 16.16-39.22Q152.33-760 175.38-760h609.24q23.05 0 39.22 16.16Q840-727.67 840-704.62v449.24q0 23.05-16.16 39.22Q807.67-200 784.62-200H175.38Zm0-30.77h609.24q9.23 0 16.92-7.69 7.69-7.69 7.69-16.92v-449.24q0-9.23-7.69-16.92-7.69-7.69-16.92-7.69H175.38q-9.23 0-16.92 7.69-7.69 7.69-7.69 16.92v449.24q0 9.23 7.69 16.92 7.69 7.69 16.92 7.69Zm-24.61 0V-729.23-230.77Z"/></svg>
+<nav class="navbar navbar-dark bg-dark fixed-bottom border-top border-secondary p-0">
+  <div class="container-fluid">
+    <div class="row w-100 justify-content-around align-items-center gx-0">
+
+      <!-- Выход -->
+      <div class="col text-center">
+        <form action="{% url 'app:logout' %}" method="post" class="w-100">
+          {% csrf_token %}
+          <button type="submit" class="btn p-0 w-100">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-escape text-white fs-3"></i>
+            </div>
+          </button>
+        </form>
       </div>
-    </button>
-    <div id="modal-balance" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal-balance" type="button" class="close-btn" style=" float: right; background: none; border: none;  color: rgb(246, 255, 95); font-size: 32px;">&times; </button>
-        <h2>Пополнение баланса</h2>
-        <p>Для пополнения баланса свяжитесь с администратором</p>
-        <p>1 coin = 1 USDT</p> 
-        <a href="{{support.url_support}}" target="_blank" class="telegram-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161l-2.17 10.397c-.163.781-.631.973-1.28.606l-3.537-2.608-1.708 1.644c-.189.189-.347.347-.712.347l.254-3.612 6.574-5.942c.286-.286-.062-.446-.44-.161L8.439 13.857l-3.51-1.099c-.764-.241-.779-.764.161-1.131l13.713-5.292c.636-.241 1.196.161.959 1.826z"/>
-            </svg>
-            Перейти в Telegram
-        </a>
+
+      <!-- Добавить обменник -->
+      <div class="col text-center">
+        <button type="button" id="add_btn" 
+                class="btn btn-warning d-inline-flex align-items-center justify-content-center shadow-sm w-100"
+                style=" height: 45px; border-width: 4px; border-radius: 8px 8px 0 0;">
+          <i class="bi bi-plus-circle-fill fs-2 m-0 p-0 text-dark"></i>
+        </button>
       </div>
-    </div>
-    <div class='wr_logo'>
-      <img class='logo' src="{% static 'icon/fon.png' %}" />
-      <p class='text_logo'>Capybara Group</p>
-    </div>
-    <form action="{% url 'app:logout' %}" method="post" style="display: inline;">
-      {% csrf_token %}
-      <button type="submit" id="btn_exit" class="btn_balanse">
-          <div class='wr_balance'>
-              <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-                  <path d="M224.62-160q-27.62 0-46.12-18.5Q160-197 160-224.62v-124.61h40v124.61q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h510.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-510.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H224.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v124.61h-40v-124.61q0-27.62 18.5-46.12Q197-800 224.62-800h510.76q27.62 0 46.12 18.5Q800-763 800-735.38v510.76q0 27.62-18.5 46.12Q763-160 735.38-160H224.62Zm209.23-163.08-28.31-28.77L513.69-460H160v-40h353.69L405.54-608.15l28.31-28.77L590.77-480 433.85-323.08Z"/>
-              </svg>
+
+      <!-- Баланс -->
+      <div class="col text-center">
+        <button type="button" id="add_balanse" class="btn p-0 w-100">
+          <div class="d-flex flex-column align-items-center">
+            <i class="bi bi-bank text-white fs-3"></i>
           </div>
-      </button>
-    </form>
+        </button>
+      </div>
+
+    </div>
   </div>
+</nav>
