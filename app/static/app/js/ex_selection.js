@@ -1,121 +1,73 @@
 document.addEventListener("DOMContentLoaded", () => {
   'use strict';
-  const toggleModal = (modal, action) => {
-    const modalContent = modal.querySelector(".modal-content");
-    if (action === "open") {
-      modal.classList.add("show");
-      modalContent.classList.add("show");
-    } else { 
-      modal.classList.remove("show");
-      modalContent.classList.remove("show");
-    }
-  };
 
-  // Управление основным модальным окном
-  const modal = document.getElementById("modal");
+  // Инициализация модальных окон Bootstrap
+  const exchangeModal = new bootstrap.Modal(document.getElementById('modal'));
+  const balanceModal = new bootstrap.Modal(document.getElementById('modal-balance'));
+
+  // Кнопки открытия модальных окон
   const addBtn = document.getElementById("add_btn");
-  const closeModalBtn = document.getElementById("close-modal");
-  const form = modal.querySelector("form");
+  const balanceBtn = document.getElementById("add_balanse");
+
+  // Управление формой обменника
+  const form = document.querySelector("#modal form");
+  const fileInput = form.querySelector("input[type='file']");
   const previewImage = document.querySelector(".image-preview__image");
-  const svgIcon = document.querySelector(".svg");
   const fileLabelText = document.querySelector(".file-label-text");
 
-  // Функция сброса формы выбора файла
-  const resetFileInput = () => {
-    previewImage.style.display = "none";
-    previewImage.src = "";
-    svgIcon.style.display = "block";
-    fileLabelText.textContent = "Выберите логотип";
-  };
+  // Открытие модальных окон
+  addBtn.addEventListener("click", () => exchangeModal.show());
+  balanceBtn.addEventListener("click", () => balanceModal.show());
 
-  // Открытие модального окна
-  addBtn.addEventListener("click", () => toggleModal(modal, "open"));
-
-  // Закрытие по кнопке
-  closeModalBtn.addEventListener("click", () => {
-    toggleModal(modal, "close");
-    form.reset();
-    resetFileInput();
-  });
-
-  // Закрытие по клику вне модального окна
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      toggleModal(modal, "close");
-      form.reset();
+  // Обработка загрузки изображения
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        previewImage.src = reader.result;
+        previewImage.classList.remove('d-none');
+        fileLabelText.textContent = file.name.length > 20
+          ? `${file.name.substring(0, 17)}...`
+          : file.name;
+      };
+      reader.readAsDataURL(file);
+    } else {
       resetFileInput();
     }
   });
 
-  // Управление файлом
-  const fileInput = document.querySelector("input[type='file']");
+  // Сброс формы при закрытии
+  document.getElementById('modal').addEventListener('hidden.bs.modal', () => {
+    form.reset();
+    resetFileInput();
+  });
 
-  if (fileInput) {
-    fileInput.addEventListener("change", () => {
-      const file = fileInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          previewImage.src = reader.result;
-          previewImage.style.display = "block";
-          svgIcon.style.display = "none"; 
-          fileLabelText.textContent = file.name.length > 20
-            ? `${file.name.substring(0, 17)}...`
-            : file.name;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        resetFileInput();
-      }
-    });
-  }
-
-  const balanceModal = document.getElementById("modal-balance");
-  const balanceBtn = document.getElementById("add_balanse");
-  const closeBalanceBtn = document.getElementById("close-modal-balance");
-
-  if (balanceModal && balanceBtn && closeBalanceBtn) {
-      // Открытие модального окна
-      balanceBtn.addEventListener("click", () => {
-          balanceModal.classList.add("show");
-          balanceModal.querySelector(".modal-content").classList.add("show");
-      });
-
-      // Закрытие по кнопке
-      closeBalanceBtn.addEventListener("click", () => {
-          balanceModal.classList.remove("show");
-          balanceModal.querySelector(".modal-content").classList.remove("show");
-      });
-
-      // Закрытие по клику вне модального окна
-      balanceModal.addEventListener("click", (e) => {
-          if (e.target === balanceModal) {
-              balanceModal.classList.remove("show");
-              balanceModal.querySelector(".modal-content").classList.remove("show");
-          }
-      });
-  }
+  // Функция сброса предпросмотра файла
+  const resetFileInput = () => {
+    previewImage.classList.add('d-none');
+    previewImage.src = '';
+    fileLabelText.textContent = 'Выберите логотип';
+  };
 
   // Проверка баланса
   const errorMessage = document.querySelector(".error");
-
   const updateButtonState = () => {
-    const addBtn = document.querySelector(".btn-primary");
+    const submitBtn = form.querySelector("button[type='submit']");
     if (userBalance < exchangePrice) {
-      addBtn.disabled = true;
+      submitBtn.disabled = true;
       errorMessage.textContent = `Ваш баланс: ${userBalance} coin. Не хватает ${exchangePrice - userBalance} coin.`;
     } else {
-      addBtn.disabled = false;
+      submitBtn.disabled = false;
       errorMessage.textContent = "";
     }
   };
-
   updateButtonState();
 });
 
+// Инициализация рейтинга
 document.addEventListener("DOMContentLoaded", () => {
   const ratings = document.querySelectorAll('.rating');
-  
   ratings.forEach(rating => {
     const ratingValue = parseFloat(rating.querySelector('.rating-number').textContent.replace(/[()]/g, ''));
     const starsInner = rating.querySelector('.stars-inner');

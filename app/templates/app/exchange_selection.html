@@ -6,161 +6,103 @@
 {% endblock %}
 
 {% block content %}
-
-<section class="container">
-
-  <div class='wr_btn_top mar_10_10'>
-
-    <button type="submit" id="add_balanse" class="btn_balanse">
-      <div class='wr_balance'>
-        <span class='text_balance'>{{user.balance}}</span>   
-        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M466.08-297.08h30.77v-42.69h52.61q12.79 0 20.7-8.92 7.92-8.93 7.92-20.59v-96.8q0-12.92-7.92-21.73-7.91-8.81-20.7-8.81h-136v-92.84h164.62v-30.77h-81.23v-42.69h-30.77v42.69h-53.62q-11.92 0-20.84 8.92-8.93 8.93-8.93 21.71v95.82q0 12.78 8.93 20.36 8.92 7.57 20.84 7.57h134.85v95.31H382.69v30.77h83.39v42.69ZM175.38-200q-23.05 0-39.22-16.16Q120-232.33 120-255.38v-449.24q0-23.05 16.16-39.22Q152.33-760 175.38-760h609.24q23.05 0 39.22 16.16Q840-727.67 840-704.62v449.24q0 23.05-16.16 39.22Q807.67-200 784.62-200H175.38Zm0-30.77h609.24q9.23 0 16.92-7.69 7.69-7.69 7.69-16.92v-449.24q0-9.23-7.69-16.92-7.69-7.69-16.92-7.69H175.38q-9.23 0-16.92 7.69-7.69 7.69-7.69 16.92v449.24q0 9.23 7.69 16.92 7.69 7.69 16.92 7.69Zm-24.61 0V-729.23-230.77Z"/></svg>
-      </div>
-    </button>
-
-    <div id="modal-balance" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal-balance" type="button" class="close-btn" style=" float: right; background: none; border: none;  color: rgb(246, 255, 95); font-size: 32px;">&times; </button>
-        <h2>Пополнение баланса</h2>
-        <p>Для пополнения баланса свяжитесь с администратором</p>
-        <p>1 coin = 1 USDT</p> 
-        <a href="{{support.url_support}}" target="_blank" class="telegram-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161l-2.17 10.397c-.163.781-.631.973-1.28.606l-3.537-2.608-1.708 1.644c-.189.189-.347.347-.712.347l.254-3.612 6.574-5.942c.286-.286-.062-.446-.44-.161L8.439 13.857l-3.51-1.099c-.764-.241-.779-.764.161-1.131l13.713-5.292c.636-.241 1.196.161.959 1.826z"/>
-            </svg>
-            Перейти в Telegram
-        </a>
-      </div>
-    </div>
-
-    <div class='wr_logo'>
-      <img class='logo' src="{% static 'icon/fon.png' %}" />
-      <p class='text_logo'>Capybara Group</p>
-    </div>
-
-    <form action="{% url 'app:logout' %}" method="post" style="display: inline;">
-      {% csrf_token %}
-      <button type="submit" id="btn_exit" class="btn_balanse">
-          <div class='wr_balance'>
-              <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-                  <path d="M224.62-160q-27.62 0-46.12-18.5Q160-197 160-224.62v-124.61h40v124.61q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h510.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-510.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H224.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v124.61h-40v-124.61q0-27.62 18.5-46.12Q197-800 224.62-800h510.76q27.62 0 46.12 18.5Q800-763 800-735.38v510.76q0 27.62-18.5 46.12Q763-160 735.38-160H224.62Zm209.23-163.08-28.31-28.77L513.69-460H160v-40h353.69L405.54-608.15l28.31-28.77L590.77-480 433.85-323.08Z"/>
-              </svg>
-          </div>
+<div class="container-fluid">
+  <!-- Верхняя навигация -->
+  <div class="row mb-4 align-items-center">
+    <div class="col-4">
+      <button type="button" id="add_balanse" 
+              class="btn btn-dark border-secondary d-flex align-items-center gap-2">
+        <span>{{user.balance}}</span>
+        <i class="bi bi-coin fs-4"></i>
       </button>
-    </form>
+    </div>
+    
+    <div class="col-4 text-center">
+      <div class="d-flex flex-column align-items-center">
+        <img src="{% static 'icon/fon.png' %}" alt="Logo" width="50" 
+             class="img-fluid mb-1">
+        <p class="mb-0 fw-bold">Capybara Group</p>
+      </div>
+    </div>
+    
+    <div class="col-4 text-end">
+      <form action="{% url 'app:logout' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-dark border-secondary">
+          <i class="bi bi-box-arrow-right fs-4"></i>
+        </button>
+      </form>
+    </div>
   </div>
 
-  <div class="mar_10_10 flex_gap_20">
+  <!-- Карточки обменников -->
+  <div class="row g-4">
     {% for exchange in user_exchanges %}
-  
-    <a href="{% url 'app:ex_detail' exchange.id %}">
-      <div class='exchange-box'>
-        <div class="exchange-info">
-          <div class="exchange-logo">
-            <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
-            
-            {% if exchange.has_verified %}
-              <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
-            {% endif %}
-  
-            <div class="rating">
-              
-              <div class="stars-outer">
-                  ★★★★★
-                  <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
-                      ★★★★★
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'app:ex_detail' exchange.id %}" 
+         class="text-decoration-none">
+        <div class="card bg-dark border-secondary h-100">
+          <div class="card-body">
+            <div class="d-flex gap-3">
+              <div class="position-relative">
+                <img src="{{ exchange.logo.url }}" 
+                     class="rounded-circle" 
+                     width="70" height="70" 
+                     alt="Exchange logo">
+                {% if exchange.has_verified %}
+                <img src="{{ exchange.verifications.template.logo.url }}" 
+                     class="position-absolute top-0 end-0" 
+                     width="40" height="40" 
+                     alt="Verified">
+                {% endif %}
+                
+                <div class="rating mt-2">
+                  <div class="stars-outer">
+                    ★★★★★
+                    <div class="stars-inner">★★★★★</div>
                   </div>
+                  <span>({{ exchange.rating }})</span>
+                </div>
               </div>
               
-              <span class="rating-number">({{ exchange.rating }})</span>
-            </div>
-
-          </div>
-          <div class="ex_detali">
-            <h2 class='ex_title'>{{ exchange.name }}</h2>
-            <p class="ex_description">Город: {{ exchange.city }}</p>
-            <div class=''>
-              {% if exchange.is_active %}
-              <span class='wr_is_active'>Активен:
-                <div class="is_active"></div>
-              </span>
-              {% else %}
-              <span class='wr_is_active'>Не активен:
-                <div class="no_active"></div>
-              </span>
-              {% endif%}
+              <div>
+                <h5 class="card-title text-warning fw-bold mb-2">
+                  {{ exchange.name }}
+                </h5>
+                <p class="card-text text-white mb-2">
+                  Город: {{ exchange.city }}
+                </p>
+                <div class="d-flex align-items-center gap-2">
+                  <span>
+                    {{ exchange.is_active|yesno:"Активен,Не активен" }}:
+                  </span>
+                  <div class="status-dot 
+                              {{ exchange.is_active|yesno:'bg-success,bg-danger' }}">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
     {% empty %}
-     <h3>У вас ещё нет обменника.</h3>
-    {% endfor %} 
+    <div class="col-12 text-center">
+      <h3 class="text-white">У вас ещё нет обменника.</h3>
+    </div>
+    {% endfor %}
   </div>
 
-  <div class="wr_btn mar_10_10">
-    <button type="submit" id="add_btn" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" height="64px" viewBox="0 -960 960 960" width="64px" fill="#FFFFFF">
-        <path d="M466.08-300h30.77v-162.92H660v-30.77H496.85V-660h-30.77v166.31H300v30.77h166.08V-300Zm14.32 180q-75.18 0-140.29-28.34-65.12-28.34-114.25-77.42-49.13-49.08-77.49-114.21Q120-405.11 120-480.37q0-74.49 28.34-140.07 28.34-65.57 77.42-114.2 49.08-48.63 114.21-76.99Q405.11-840 480.37-840q74.49 0 140.07 28.34 65.57 28.34 114.2 76.92 48.63 48.58 76.99 114.26Q840-554.81 840-480.4q0 75.18-28.34 140.29-28.34 65.12-76.92 114.07-48.58 48.94-114.26 77.49Q554.81-120 480.4-120Zm.1-30.77q136.88 0 232.81-96.04 95.92-96.04 95.92-233.69 0-136.88-95.73-232.81-95.74-95.92-233.5-95.92-137.15 0-233.19 95.73-96.04 95.74-96.04 233.5 0 137.15 96.04 233.19 96.04 96.04 233.69 96.04ZM480-480Z"/></svg>
+  <!-- Кнопка добавления -->
+  <div class="text-center mt-4">
+    <button type="button" id="add_btn" 
+            class="btn btn-dark border-secondary rounded-circle p-3">
+      <i class="bi bi-plus-lg fs-1 text-warning"></i>
     </button>
   </div>
- 
-  <div class="">
-    <div id="modal" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal" type="button" class='close-btn' style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
-          &times;</button>
-        <h2>Создание обменника:</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="">
-                <label for="id_name"></label>
-                {{ form.name }}
-            </div>
-            <div class="">
-                <label for="id_url_operator"></label>
-                {{ form.url_operator }}
-            </div>
-            <div class="">
-                <label for="id_description"></label>
-                {{ form.description }}
-            </div>
-            <div class="">
-                <label for="id_city"></label>
-                {{ form.city }}
-            </div>
 
-            <div class="file-upload">
-              <label for="id_logo" class="custom-file-label">
-                <svg class='svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1c1c1c">
-                  <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
-                </svg>
-                <div class="image-preview" id="imagePreview">
-                  <img src="" alt="Превью" class="image-preview__image" style="display: none;" />
-                </div>
-                <span class="file-label-text">Выберите логотип</span>
-              </label>
-              {{ form.logo }}
-            </div>
-            <p>*Стоимость создания обменника:<br>{{exchange_price}} coin</p>
-            <p class='error'></p>
-            <button type="submit" class="btn btn-primary">Создать</button>
-        </form>
-      </div>
-    </div>
-  </div> 
-
-</section>
-
-{% endblock %}
-
-{% block scripts %}
-<script>
-  const userBalance = {{user.balance}};
-  const exchangePrice = {{exchange_price}};  
-</script>
-
-<script src="{% static 'app/js/ex_selection.js' %}"></script>
-
+  <!-- Модальные окна -->
+  {% include "app/includes/balance_modal.html" %}
+  {% include "app/includes/exchange_modal.html" %}
+</div>
 {% endblock %}

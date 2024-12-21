@@ -49,13 +49,16 @@ def exchange_selection(request):
     else:
         form = forms.ExchangeForm(initial={'owner': request.user, 'city': models.SubLocation.objects.first()})
 
-    return render(request, 'app/exchange_selection.html', {
+    context=  {
         'user_exchanges': models.Exchange.objects.filter(owner=request.user),
         'user': request.user,
         'form': form,
         'exchange_price': exchange_price,
         'support': models.Support.objects.first(),
-    })
+    }
+
+
+    return render(request, 'app/exchange_selection.html', context)
 
 
 class ExchangeDetailView(LoginRequiredMixin, View):
@@ -76,3 +79,6 @@ class ExchangeDetailView(LoginRequiredMixin, View):
     def _determine_form_type(self, post_data):
         """Определить тип формы"""
         return post_data.get('form_type', 'exchange_pair')
+    
+
+
