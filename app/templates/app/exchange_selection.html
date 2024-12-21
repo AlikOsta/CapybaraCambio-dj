@@ -1,108 +1,36 @@
 {% extends 'layout/basic.html' %} 
 {% load static %} 
-
 {% block static %}
 <link rel="stylesheet" href="{% static 'app/css/ex_selection.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-  <!-- Верхняя навигация -->
-  <div class="row mb-4 align-items-center">
-    <div class="col-4">
-      <button type="button" id="add_balanse" 
-              class="btn btn-dark border-secondary d-flex align-items-center gap-2">
-        <span>{{user.balance}}</span>
-        <i class="bi bi-coin fs-4"></i>
-      </button>
-    </div>
-    
-    <div class="col-4 text-center">
-      <div class="d-flex flex-column align-items-center">
-        <img src="{% static 'icon/fon.png' %}" alt="Logo" width="50" 
-             class="img-fluid mb-1">
-        <p class="mb-0 fw-bold">Capybara Group</p>
-      </div>
-    </div>
-    
-    <div class="col-4 text-end">
-      <form action="{% url 'app:logout' %}" method="post" class="d-inline">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-dark border-secondary">
-          <i class="bi bi-box-arrow-right fs-4"></i>
-        </button>
-      </form>
-    </div>
-  </div>
+<section class="container">
 
-  <!-- Карточки обменников -->
-  <div class="row g-4">
-    {% for exchange in user_exchanges %}
-    <div class="col-12 col-md-6 col-lg-4">
-      <a href="{% url 'app:ex_detail' exchange.id %}" 
-         class="text-decoration-none">
-        <div class="card bg-dark border-secondary h-100">
-          <div class="card-body">
-            <div class="d-flex gap-3">
-              <div class="position-relative">
-                <img src="{{ exchange.logo.url }}" 
-                     class="rounded-circle" 
-                     width="70" height="70" 
-                     alt="Exchange logo">
-                {% if exchange.has_verified %}
-                <img src="{{ exchange.verifications.template.logo.url }}" 
-                     class="position-absolute top-0 end-0" 
-                     width="40" height="40" 
-                     alt="Verified">
-                {% endif %}
-                
-                <div class="rating mt-2">
-                  <div class="stars-outer">
-                    ★★★★★
-                    <div class="stars-inner">★★★★★</div>
-                  </div>
-                  <span>({{ exchange.rating }})</span>
-                </div>
-              </div>
-              
-              <div>
-                <h5 class="card-title text-warning fw-bold mb-2">
-                  {{ exchange.name }}
-                </h5>
-                <p class="card-text text-white mb-2">
-                  Город: {{ exchange.city }}
-                </p>
-                <div class="d-flex align-items-center gap-2">
-                  <span>
-                    {{ exchange.is_active|yesno:"Активен,Не активен" }}:
-                  </span>
-                  <div class="status-dot 
-                              {{ exchange.is_active|yesno:'bg-success,bg-danger' }}">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
-    {% empty %}
-    <div class="col-12 text-center">
-      <h3 class="text-white">У вас ещё нет обменника.</h3>
-    </div>
-    {% endfor %}
-  </div>
+  <!-- HEADER INCLUDE -->
+  {% include 'app/include/menu_select_include.html' %}
+  <!-- END HEADER INCLUDE -->
 
-  <!-- Кнопка добавления -->
-  <div class="text-center mt-4">
-    <button type="button" id="add_btn" 
-            class="btn btn-dark border-secondary rounded-circle p-3">
-      <i class="bi bi-plus-lg fs-1 text-warning"></i>
-    </button>
-  </div>
+  <!-- EXCHANGE CARDS INCLUDE -->
+  {% include 'app/include/card_exchange_include.html' %}
+  <!-- END EXCHANGE CARDS INCLUDE -->
 
-  <!-- Модальные окна -->
-  {% include "app/includes/balance_modal.html" %}
-  {% include "app/includes/exchange_modal.html" %}
-</div>
+  <!-- ADD BUTTON INCLUDE -->
+  {% include 'app/include/add_btn_include.html' %}
+  <!-- END ADD BUTTON INCLUDE -->
+ 
+  <!-- MODALS INCLUDE -->
+  {% include 'app/include/modals_add_exchange_include.html' %}
+  <!-- END MODALS INCLUDE -->
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const userBalance = {{user.balance}};
+  const exchangePrice = {{exchange_price}};  
+</script>
+<script src="{% static 'app/js/ex_selection.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,43 @@
+<div class="">
+    <div id="modal" class="modal-overlay">
+      <div class="modal-content">
+        <button id="close-modal" type="button" class='close-btn' style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
+          &times;</button>
+        <h2>Создание обменника:</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="">
+                <label for="id_name"></label>
+                {{ form.name }}
+            </div>
+            <div class="">
+                <label for="id_url_operator"></label>
+                {{ form.url_operator }}
+            </div>
+            <div class="">
+                <label for="id_description"></label>
+                {{ form.description }}
+            </div>
+            <div class="">
+                <label for="id_city"></label>
+                {{ form.city }}
+            </div>
+            <div class="file-upload">
+              <label for="id_logo" class="custom-file-label">
+                <svg class='svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1c1c1c">
+                  <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
+                </svg>
+                <div class="image-preview" id="imagePreview">
+                  <img src="" alt="Превью" class="image-preview__image" style="display: none;" />
+                </div>
+                <span class="file-label-text">Выберите логотип</span>
+              </label>
+              {{ form.logo }}
+            </div>
+            <p>*Стоимость создания обменника:<br>{{exchange_price}} coin</p>
+            <p class='error'></p>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </form>
+      </div>
+    </div>
+  </div> 

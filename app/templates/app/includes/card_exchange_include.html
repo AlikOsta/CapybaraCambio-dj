@@ -1,0 +1,45 @@
+<div class="mar_10_10 flex_gap_20">
+    {% for exchange in user_exchanges %}
+  
+    <a href="{% url 'app:ex_detail' exchange.id %}">
+      <div class='exchange-box'>
+        <div class="exchange-info">
+          <div class="exchange-logo">
+            <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
+            
+            {% if exchange.has_verified %}
+              <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
+            {% endif %}
+  
+            <div class="rating">
+              <div class="stars-outer">
+                  ★★★★★
+                  <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
+                      ★★★★★
+                  </div>
+              </div>
+              <span class="rating-number">({{ exchange.rating }})</span>
+            </div>
+          </div>
+          <div class="ex_detali">
+            <h2 class='ex_title'>{{ exchange.name }}</h2>
+            <p class="ex_description">Город: {{ exchange.city }}</p>
+            <div class=''>
+              {% if exchange.is_active %}
+              <span class='wr_is_active'>Активен:
+                <div class="is_active"></div>
+              </span>
+              {% else %}
+              <span class='wr_is_active'>Не активен:
+                <div class="no_active"></div>
+              </span>
+              {% endif%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% empty %}
+     <h3>У вас ещё нет обменника.</h3>
+    {% endfor %} 
+  </div>
