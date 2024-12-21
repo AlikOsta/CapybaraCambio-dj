@@ -2,9 +2,10 @@
 {% load static %} 
 {% block content %}
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card bg-dark text-white border-secondary" style="width: 350px;">
-    <div class="card-body">
+<div class="container position-absolute top-50 start-50 translate-middle">
+  <div class="card bg-dark text-white border-secondary mx-auto" style="width: 350px; border-radius: 20px;">
+    <div class="card-body py-4 px-4">
+      
       <h2 class="card-title text-center mb-4">АВТОРИЗАЦИЯ</h2>
 
       <form method="post">
@@ -12,31 +13,34 @@
 
         <div class="mb-3">
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary">
+            <span class="input-group-text bg-dark border-secondary rounded-start-4">
               <i class="bi bi-person-fill text-warning"></i>
             </span>
-            <input type="text" name="username" class="form-control bg-dark text-white border-secondary" 
+            <input type="text" name="username" 
+                   class="form-control bg-dark text-white border-secondary rounded-end-4" 
                    placeholder="Имя" required>
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary">
+            <span class="input-group-text bg-dark border-secondary rounded-start-4">
               <i class="bi bi-lock-fill text-warning"></i>
             </span>
-            <input type="password" name="password" class="form-control bg-dark text-white border-secondary" 
+            <input type="password" name="password" 
+                   class="form-control bg-dark text-white border-secondary rounded-end-4" 
                    placeholder="*******" required>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-dark border-secondary w-100 text-warning fw-bold">
+        <button type="submit" 
+                class="btn btn-dark border-secondary w-100 py-2 rounded-4 text-warning fw-bold">
           Войти
         </button>
       </form>
 
       {% if form.errors %}
-        <div class="alert alert-danger mt-3">
+        <div class="alert alert-danger mt-3 rounded-4">
           {% for field in form %}
             {% for error in field.errors %}
               <p class="mb-0">{{ error }}</p>

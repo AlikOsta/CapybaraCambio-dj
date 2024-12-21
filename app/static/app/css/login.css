@@ -1,21 +1,17 @@
 
-.container h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: rgb(246, 255, 95);
+
+.card {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-.img {
-  width: 70px;
-  margin-bottom: 20px;
+.input-group-text,
+.form-control {
+  height: 45px;
 }
 
-.icon {
-  position: absolute;
-  left: 17px;
-  display: flex;
-  align-items: center; 
-  justify-content: center;
-  height: 100%; 
+.form-control:focus {
+  background-color: #1c1c1c;
+  color: #fff;
+  border-color: #565656;
+  box-shadow: none;
 }
-
