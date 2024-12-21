@@ -18,14 +18,20 @@
       <div class="col text-center">
         <button type="button" id="add_btn" 
                 class="btn btn-warning d-inline-flex align-items-center justify-content-center shadow-sm w-100"
-                style=" height: 45px; border-width: 4px; border-radius: 8px 8px 0 0;">
-          <i class="bi bi-plus-circle-fill fs-2 m-0 p-0 text-dark"></i>
+                style="height: 45px; border-width: 4px; border-radius: 8px 8px 0 0;"
+                data-bs-toggle="modal" 
+                data-bs-target="#addExchangeModal">
+          <i class="bi bi-plus-circle-fill fs-3 m-0 p-0 text-dark"></i>
         </button>
       </div>
 
+
       <!-- Баланс -->
       <div class="col text-center">
-        <button type="button" id="add_balanse" class="btn p-0 w-100">
+        <button type="button" id="add_balanse" 
+                class="btn p-0 w-100"
+                data-bs-toggle="modal" 
+                data-bs-target="#balanceModal">
           <div class="d-flex flex-column align-items-center">
             <i class="bi bi-bank text-white fs-3"></i>
           </div>

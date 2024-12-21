@@ -6,30 +6,26 @@
 {% endblock %}
 
 {% block content %}
-<main class="container-fluid py-3">
-  <!-- Компоненты с улучшенной семантикой -->
-
+<main class="container-fluid">
   <section class="exchange-cards my-4">
     {% include 'app/includes/card_exchange_include.html' %}
   </section>
-
-  {% comment %} <nav class="action-buttons">
-    {% include 'app/includes/add_btn_include.html' %}
-  </nav> {% endcomment %}
 
   <nav>
     {% include 'app/includes/menu_select_include.html' %}
   </nav>
 
-  <!-- Модальные окна -->
+  <!-- Modal -->
   {% include 'app/includes/modals_add_exchange_include.html' %}
 </main>
 {% endblock %}
 
 {% block scripts %}
+
 <script>
   const userBalance = {{user.balance}};
   const exchangePrice = {{exchange_price}};  
 </script>
+
 <script src="{% static 'app/js/ex_selection.js' %}"></script>
 {% endblock %}

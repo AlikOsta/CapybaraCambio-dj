@@ -1,43 +1,48 @@
 <div class="row g-4">
   {% for exchange in user_exchanges %}
   <article class="col-12 col-md-6 col-lg-4">
-    <a href="{% url 'app:ex_detail' exchange.id %}" 
-       class="text-decoration-none">
-      <div class="card h-100 bg-dark border-secondary hover-card">
-        <div class="card-body">
-          <div class="d-flex gap-3">
-            <!-- Логотип и рейтинг -->
-            <div class="position-relative">
-              <img src="{{ exchange.logo.url }}" 
-                   class="rounded-circle" 
-                   width="70" height="70" 
-                   alt="{{ exchange.name }} logo">
-              
-              {% if exchange.has_verified %}
-              <img src="{{ exchange.verifications.template.logo.url }}" 
-                   class="position-absolute top-0 end-0" 
-                   width="30" height="30" 
-                   alt="Verified">
-              {% endif %}
+    <a href="{% url 'app:ex_detail' exchange.id %}" class="text-decoration-none">
+      <div class="card h-100 bg-dark bg-opacity-75 border-secondary hover-card">
+        <div class="card-body p-4">
+          <div class="d-flex gap-4">
+            <div class="d-flex flex-column align-items-center gap-3">
 
-              <div class="rating mt-2">
+              <div class="position-relative" style="width: 80px; height: 80px;">
+                <img src="{{ exchange.logo.url }}"
+                    class="rounded-circle border border-2 border-warning w-100 h-100"
+                    alt="{{ exchange.name }} logo">
+                
+                {% if exchange.has_verified %}
+                <img src="{{ exchange.verifications.template.logo.url }}"
+                    class="position-absolute top-0 end-0"
+                    width="35" height="35"
+                    alt="Verified"
+                    style="transform: translate(10%, -10%); z-index: 2;">
+                {% endif %}
+              </div>
+
+              <!-- Рейтинг -->
+              <div class="rating">
                 <div class="stars-outer">
                   ★★★★★
                   <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
                     ★★★★★
                   </div>
                 </div>
-                <span class="rating-value">({{ exchange.rating }})</span>
+                <span class="rating-value small text-warning">({{ exchange.rating }})</span>
               </div>
             </div>
 
             <!-- Информация -->
             <div>
-              <h2 class="h5 text-warning fw-bold mb-2">{{ exchange.name }}</h2>
-              <p class="text-white-50 mb-2">Город: {{ exchange.city }}</p>
+              <h2 class="h4 text-warning fw-bold mb-3">{{ exchange.name }}</h2>
+              <p class="text-white-50 mb-2">
+                <i class="bi bi-geo-alt-fill me-2"></i>
+                {{ exchange.city }}
+              </p>
               <div class="d-flex align-items-center gap-2">
                 <span class="text-white-50">
-                  {{ exchange.is_active|yesno:"Активен,Не активен" }}:
+                  {{ exchange.is_active|yesno:"Активен,Не активен" }}
                 </span>
                 <span class="status-dot rounded-circle 
                            {{ exchange.is_active|yesno:'bg-success,bg-danger' }}">

@@ -1,43 +1,78 @@
-<div class="">
-    <div id="modal" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal" type="button" class='close-btn' style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
-          &times;</button>
-        <h2>Создание обменника:</h2>
+
+<div class="modal fade" id="addExchangeModal" tabindex="-1" role="dialog" aria-labelledby="addExchangeModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="addExchangeModalLabel">Создание обменника</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="">
-                <label for="id_name"></label>
-                {{ form.name }}
-            </div>
-            <div class="">
-                <label for="id_url_operator"></label>
-                {{ form.url_operator }}
-            </div>
-            <div class="">
-                <label for="id_description"></label>
-                {{ form.description }}
-            </div>
-            <div class="">
-                <label for="id_city"></label>
-                {{ form.city }}
-            </div>
-            <div class="file-upload">
-              <label for="id_logo" class="custom-file-label">
-                <svg class='svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1c1c1c">
-                  <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
-                </svg>
-                <div class="image-preview" id="imagePreview">
-                  <img src="" alt="Превью" class="image-preview__image" style="display: none;" />
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.name }}
+          </div>
+          <div class="mb-3">
+            {{ form.url_operator }}
+          </div>
+          <div class="mb-3">
+            {{ form.description }}
+          </div>
+          <div class="mb-3">
+            {{ form.city }}
+          </div>
+          <div class="mb-3">
+            <label class="preview-container mx-auto d-block position-relative" style="width: 100px; height: 100px; cursor: pointer;">
+              <div class="rounded-circle border border-warning w-100 h-100 overflow-hidden">
+                <img src="" class="image-preview__image w-100 h-100 object-fit-cover d-none">
+                <div class="placeholder-icon d-flex align-items-center justify-content-center h-100 bg-dark">
+                  <i class="bi bi-upload text-warning fs-1"></i>
                 </div>
-                <span class="file-label-text">Выберите логотип</span>
-              </label>
-              {{ form.logo }}
+              </div>
+              <div style="display: none;">
+                {{ form.logo }}
+              </div>
+            </label>
+            <div class="text-center mt-2">
+              <small class="file-label-text text-warning">Выберите логотип</small>
             </div>
-            <p>*Стоимость создания обменника:<br>{{exchange_price}} coin</p>
-            <p class='error'></p>
-            <button type="submit" class="btn btn-primary">Создать</button>
+          </div>
+          <p class="small text-warning">*Стоимость создания обменника: {{exchange_price}} coin</p>
+          <p class="error text-danger"></p>
+          <button type="submit" class="btn btn-warning w-100 py-3 fs-5 fw-bold">Создать</button>
         </form>
       </div>
     </div>
-  </div> 
+  </div>
+</div>
+
+<div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Пополнение баланса</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <div class="display-4 text-warning mb-2">
+            {{user.balance}}
+            <i class="bi bi-coin spin-animation"></i>
+          </div>
+          <div class="text-white">Ваш текущий баланс</div>
+        </div>
+
+        <div class="alert alert-warning text-dark mb-4">
+          <i class="bi bi-info-circle me-2"></i>
+          Курс обмена: 1 coin = 1 USDT
+        </div>
+
+        <a href="{{support.url_support}}" target="_blank" class="btn btn-warning w-100 py-3 fs-5 fw-bold">
+          <i class="bi bi-telegram me-2 fs-4"></i>
+          Связаться с менеджером
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
