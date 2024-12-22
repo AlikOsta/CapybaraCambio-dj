@@ -79,6 +79,8 @@ def handle_exchange_pair_form(request, exchange):
         except ValidationError as e:
             return {'success': False, 'error': str(e)}
     return {'success': False, 'error': 'Форма заполнена неверно'}
+
+
 def handle_exchange_edit_form(request, exchange):
     """Обработка формы редактирования обменника"""
     form = ExchangeForm(request.POST, request.FILES, instance=exchange)

@@ -2,40 +2,48 @@
 {% load static %} 
 
 {% block static %}
-<link rel="stylesheet" href="{% static 'app/css/ex_selection.css' %}" />
 <link rel="stylesheet" href="{% static 'app/css/ex_detali.css' %}" />
 {% endblock %} 
 
 {% block content %}
-
-
 <main class="container-fluid">
-
-  <!-- карточка обменника -->
-  <section class=''>
+  
+  <section>
     <div class="row justify-content-center g-3">
-      <article class="col-12 col-md-8 col-lg-6">
+      <article class="col-12 col-md-6 col-lg-4">
         {% include 'app/includes/card_exchange_include.html' %}
       </article>
     </div>
   </section>
-
-  <!-- карточка обменного курса -->
+  
   <section class="exchange-cards">
     <div class="row justify-content-center g-3">
-      <article class="col-12 col-md-8 col-lg-6">
-        {% include 'app/includes/card_rate_include.html' %}
-      </article>
+      {% for pair in exchange_pair %}
+        <article class="col-12 col-md-6 col-lg-4">
+          {% include 'app/includes/card_rate_include.html' with pair=pair %}
+        </article>
+      {% endfor %}
     </div>
   </section>
-      
 
+  <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addRateModal">
+    <i class="bi bi-plus-lg"></i> Добавить курс обмена
+  </button>
+
+  <!-- Нижнее меню -->
   <nav>
     {% include 'app/includes/menu_detali_include.html' %}
   </nav>
 
+  <!-- Модальные окна -->
   {% include 'app/includes/modals_detail_include.html' %}
+
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'app/js/ex_detali.js' %}"></script>
+{% endblock %}
 
 
 
@@ -402,13 +410,13 @@
 
 
   
-{% endblock %} 
 
-{% block scripts %} 
+
+{% comment %} {% block scripts %} 
 
   
 <script src="{% static 'app/js/ex_detali.js' %}"></script>
 <script src="{% static 'app/js/getRate.js' %}"></script>
 
 
-{% endblock %}
+{% endblock %} {% endcomment %}
