@@ -1,12 +1,41 @@
-<div class="modal fade" id="editExchangeModal" tabindex="-1" aria-labelledby="editExchangeModalLabel">
-
+<div class="modal fade" id="editRateModal" tabindex="-1">
     <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Редактирование курса</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="exchange_pair">
+            <input type="hidden" name="pair_id" id="pairId">
+            <div class="mb-3">
+              <label class="form-label">Курс отдачи</label>
+              <input type="number" class="form-control" id="giveRate" name="give_rate" step="0.01">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Курс получения</label>
+              <input type="number" class="form-control" id="getRate" name="get_rate" step="0.01">
+            </div>
+            <button type="submit" class="btn btn-warning w-100">Сохранить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
 
+
+
+
+
+  <div class="modal fade" id="editExchangeModal" tabindex="-1" aria-labelledby="editExchangeModalLabel">
+    <div class="modal-dialog">
       <div class="modal-content bg-dark text-white border-secondary">
 
         <div class="modal-header border-secondary">
-          <h5 class="modal-title">Информация о {{ exchange.name }}</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <h5 class="modal-title">Информация о {{ exchange.name }}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
@@ -54,5 +83,47 @@
                 <button type="submit" class="btn btn-warning w-100 py-3 fw-bold">Сохранить</button>
             </form>
         </div>
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal fade" id="addRateModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Новый курс обмена</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="new_exchange_pair">
+            
+            <div class="mb-3">
+              <label class="form-label">Валюта отдачи</label>
+              {{ exchange_pair_form.give_currency }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Валюта получения</label>
+              {{ exchange_pair_form.get_currency }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Курс отдачи</label>
+              {{ exchange_pair_form.give_rate }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Курс получения</label>
+              {{ exchange_pair_form.get_rate }}
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">Создать</button>
+          </form>
+        </div>
+      </div>
     </div>
 </div>

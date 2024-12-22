@@ -1,18 +1,21 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.views import View
-from .services import get_exchange_with_owner, get_active_comments, get_exchange_pairs
+
+from . import services 
 from .forms_handlers import prepare_delivery_form
-from .utils import get_context_data
 from .handlers import handle_form
+
 from . import forms
 from . import models
-from django.http import JsonResponse
 
 
 class UserLoginView(LoginView):
@@ -61,18 +64,19 @@ def exchange_selection(request):
     return render(request, 'app/exchange_selection.html', context)
 
 
+
 # class ExchangeDetailView(LoginRequiredMixin, View):
 #     template_name = 'app/exchange_detail.html'
 
 #     def get(self, request, id):
-#         exchange = get_exchange_with_owner(id, request.user)
-#         comments = get_active_comments(exchange)
-#         exchange_pairs = get_exchange_pairs(exchange)
-#         context = get_context_data(exchange, exchange_pairs, comments)
+#         exchange = services.get_exchange_with_owner(id, request.user)
+#         comments = services.get_active_comments(exchange)
+#         exchange_pairs = services.get_exchange_pairs(exchange)
+#         context = services.get_context_data(exchange, exchange_pairs, comments)
 #         return render(request, self.template_name, context)
 
 #     def post(self, request, id):
-#         exchange = get_exchange_with_owner(id, request.user)
+#         exchange = services.get_exchange_with_owner(id, request.user)
 #         form_type = self._determine_form_type(request.POST)
 #         return JsonResponse(handle_form(request, form_type, exchange))
 
@@ -80,11 +84,20 @@ def exchange_selection(request):
 #         """Определить тип формы"""
 #         return post_data.get('form_type', 'exchange_pair')
 
-@login_required
-def exchange_detail(request, exchange_slug):
-    
 
-    return render(request, 'app/exchange_detail.html')
+def exchange_detail(request, exchange_slug):
+    exchange = services.get_exchange_with_owner(exchange_slug, request.user)
+    comments = services.get_active_comments(exchange)
+    exchange_pairs = services.get_exchange_pairs(exchange)
+
+    context = {
+        'exchange': exchange,
+        'exchange_pairs': exchange_pairs,
+        'form': forms.ExchangePairForm(),
+
+    }
+
+    return render(request, 'app/exchange_detail.html', context)
     
 
 
