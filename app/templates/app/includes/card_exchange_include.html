@@ -1,11 +1,10 @@
-<div class="row g-4">
-  {% for exchange in user_exchanges %}
-  <article class="col-12 col-md-6 col-lg-4">
-    <a href="{% url 'app:ex_detail' exchange.id %}" class="text-decoration-none">
-      <div class="card h-100 bg-dark bg-opacity-75 border-secondary hover-card">
-        <div class="card-body p-4">
-          <div class="d-flex gap-4">
-            <div class="d-flex flex-column align-items-center gap-3">
+
+
+
+      <div class="card h-100 bg-dark border-secondary hover-card">
+        <div class="card-body p-2">
+          <div class="d-flex gap-4 justify-content-around " >
+            <div class="d-flex flex-column align-items-center gap-3 h-100">
 
               <div class="position-relative" style="width: 80px; height: 80px;">
                 <img src="{{ exchange.logo.url }}"
@@ -20,8 +19,7 @@
                     style="transform: translate(10%, -10%); z-index: 2;">
                 {% endif %}
               </div>
-
-              <!-- Рейтинг -->
+            
               <div class="rating">
                 <div class="stars-outer">
                   ★★★★★
@@ -33,8 +31,7 @@
               </div>
             </div>
 
-            <!-- Информация -->
-            <div>
+            <div class="d-flex flex-column align-items-center justify-content-around ">
               <h2 class="h4 text-warning fw-bold mb-3">{{ exchange.name }}</h2>
               <p class="text-white-50 mb-2">
                 <i class="bi bi-geo-alt-fill me-2"></i>
@@ -48,15 +45,14 @@
                            {{ exchange.is_active|yesno:'bg-success,bg-danger' }}">
                 </span>
               </div>
+              <div class="small text-white-50 text-center">
+                Зарегестирован: {{ exchange.created_at|date:"d.m.y" }}
+              </div>
+
             </div>
           </div>
         </div>
       </div>
-    </a>
-  </article>
-  {% empty %}
-  <div class="col-12 text-center">
-    <p class="h4 text-white-50">У вас ещё нет обменника.</p>
-  </div>
-  {% endfor %}
-</div>
+
+
+

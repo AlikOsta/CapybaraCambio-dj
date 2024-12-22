@@ -17,7 +17,7 @@
           </div>
           <div class="mb-3">
             {{ form.description }}
-          </div>
+        </div>        
           <div class="mb-3">
             {{ form.city }}
           </div>
@@ -39,7 +39,7 @@
           </div>
           <p class="small text-warning">*Стоимость создания обменника: {{exchange_price}} coin</p>
           <p class="error text-danger"></p>
-          <button type="submit" class="btn btn-warning w-100 py-3 fs-5 fw-bold">Создать</button>
+          <button type="submit" class="btn btn-warning w-100 py-2 fs-5 fw-bold" id='add_ex'>Создать</button>
         </form>
       </div>
     </div>
@@ -68,7 +68,7 @@
           Курс обмена: 1 coin = 1 USDT
         </div>
 
-        <a href="{{support.url_support}}" target="_blank" class="btn btn-warning w-100 py-3 fs-5 fw-bold">
+        <a href="{{support.url_support}}" target="_blank" class="btn btn-warning w-100 py-2 fs-5 fw-bold">
           <i class="bi bi-telegram me-2 fs-4"></i>
           Связаться с менеджером
         </a>

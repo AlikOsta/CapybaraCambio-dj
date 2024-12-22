@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+
 def handle_verification_form(request, exchange):
     """Обработка формы верификации"""
     form = VerificationForm(request.POST)
@@ -43,6 +44,7 @@ def handle_delivery_form(request, exchange):
         except ValidationError as e:
             return {'success': False, 'error': str(e)}
     return {'success': False, 'error': form.errors}
+
 
 def handle_exchange_pair_form(request, exchange):
     """Обработка формы валютной пары"""
@@ -89,6 +91,7 @@ def handle_exchange_edit_form(request, exchange):
         except ValidationError as e:
             return {'success': False, 'error': str(e)}
     return {'success': False, 'error': form.errors}
+
 
 def handle_edit_pair_form(request, exchange):
     """Обработка формы редактирования валютной пары"""

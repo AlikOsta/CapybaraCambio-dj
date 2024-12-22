@@ -1,0 +1,58 @@
+<nav class="navbar navbar-dark bg-dark fixed-bottom border-top border-secondary p-0">
+    <div class="container-fluid">
+      <div class="row w-100 justify-content-around align-items-center gx-0">
+  
+        <div class="col text-center">
+            <button onclick="history.back()" class="btn p-0 w-100">
+              <div class="d-flex flex-column align-items-center">
+                <i class="bi bi-arrow-left text-white fs-3"></i>
+              </div>
+            </button>
+          </div>
+  
+        <div class="col text-center">
+          {% if exchange.has_verified %}
+          <button class="btn p-0 w-100" id="show-verify-info-btn">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-patch-check text-white fs-3"></i>
+            </div>
+          </button>
+          {% else %}
+          <button class="btn p-0 w-100" id="verify-btn">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-patch-check text-white fs-3"></i>
+            </div>
+          </button>
+          {% endif %}
+        </div>
+  
+        <div class="col text-center">
+          {% if exchange.has_active_delivery %}
+          <button class="btn p-0 w-100" id="edit-delivery-btn">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-truck text-white fs-3"></i>
+            </div>
+          </button>
+          {% else %}
+          <button class="btn p-0 w-100" id="delivery-btn">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-truck text-white fs-3"></i>
+            </div>
+          </button>
+          {% endif %}
+        </div>
+  
+        <div class="col text-center">
+          <button class="btn p-0 w-100" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#editExchangeModal">
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-gear text-white fs-3"></i>
+            </div>
+          </button>
+        </div>
+  
+      </div>
+    </div>
+  </nav>
+  

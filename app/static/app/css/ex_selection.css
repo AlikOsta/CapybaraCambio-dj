@@ -1,13 +1,5 @@
-.backdrop-blur {
+/* .backdrop-blur {
   backdrop-filter: blur(10px);
-}
-
-.hover-card {
-  transition: transform 0.2s ease-in-out;
-}
-
-.hover-card:hover {
-  transform: translateY(-5px);
 }
 
 .status-dot {
@@ -84,3 +76,8 @@
   border-radius: 15px 15px 0 0;
   border-bottom: none;
 }
+
+.error{
+  text-align: center;
+}
+ */

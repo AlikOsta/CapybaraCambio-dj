@@ -1,0 +1,88 @@
+<div class="content" id="currencies-content">
+  {% for pair in exchange_pair %}
+    <div class="mb-3">
+      <div class="card bg-dark bg-opacity-75 border-secondary rounded-4 hover-card" 
+           data-pair-id="{{ pair.id }}" 
+           onclick="openEditPairModal(this)">
+        <div class="card-body p-4">
+          <!-- Шапка с логотипом -->
+          <div class="d-flex gap-4 align-items-start mb-3">
+            <div class="d-flex flex-column align-items-center gap-3">
+              <div class="position-relative" style="width: 80px; height: 80px;">
+                <img src="{{ exchange.logo.url }}" 
+                     class="rounded-circle border border-2 border-warning w-100 h-100 object-fit-cover" 
+                     alt="Логотип обменника">
+                {% if exchange.has_verified %}
+                  <img src="{{ exchange.verifications.template.logo.url }}" 
+                       class="position-absolute top-0 end-0" 
+                       width="35" height="35" 
+                       alt="Verification Logo"
+                       style="transform: translate(10%, -10%);">
+                {% endif %}
+              </div>
+              
+              <!-- Рейтинг -->
+              <div class="rating">
+                <div class="stars-outer">
+                  ★★★★★
+                  <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
+                    ★★★★★
+                  </div>
+                </div>
+                <span class="small text-warning">({{ exchange.rating }})</span>
+              </div>
+            </div>
+
+            <!-- Информация о доставке -->
+            <div class="flex-grow-1">
+              <h2 class="h4 text-warning fw-bold mb-3">{{ pair.exchange }}</h2>
+              {% if exchange.has_active_delivery %}
+                <div class="d-flex align-items-center gap-3">
+                  <div class="small text-white-50">
+                    {{ exchange.delivery.template.name }}<br>
+                    {{ exchange.delivery.price }} {{ exchange.delivery.currency_delivery.code }} ≈ {{ exchange.delivery.delivery_time }} час.
+                  </div>
+                  <img class="rounded-circle" src="{{ exchange.delivery.template.logo.url }}" 
+                       width="40" height="40" alt="delivery Logo">
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <hr class="border-secondary">
+
+          <!-- Курсы обмена -->
+          <div class="d-flex justify-content-around align-items-center my-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="h5 mb-0 text-white">{{ pair.give_rate }}</span>
+              <img class="rounded-circle" src="{{ pair.give_currency.logo.url }}" 
+                   width="40" height="40" alt="">
+            </div>
+            
+            <i class="bi bi-arrow-left-right text-white fs-4"></i>
+            
+            <div class="d-flex align-items-center gap-3">
+              <span class="h5 mb-0 text-white">{{ pair.get_rate }}</span>
+              <img class="rounded-circle" src="{{ pair.get_currency.logo.url }}" 
+                   width="40" height="40" alt="">
+            </div>
+          </div>
+
+          <!-- Статус и время -->
+          <div class="d-flex justify-content-between align-items-center small text-white-50">
+            <div class="d-flex align-items-center gap-2">
+              {{ pair.is_active|yesno:"Активен,Не активен" }}
+              <span class="status-dot rounded-circle {{ pair.is_active|yesno:'bg-success,bg-danger' }}"></span>
+            </div>
+            <div>
+              <i class="bi bi-clock-history me-1"></i>
+              Обновлено: {{pair.updated_at|date:"d.m.Y"}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center text-white-50">У вас нет пар обмена.</p>
+  {% endfor %}
+</div>

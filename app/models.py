@@ -9,7 +9,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import re
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now
+from django.utils.text import slugify
 
 
 class CustomUser(AbstractUser):
@@ -23,6 +24,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
     
+
 class Support(models.Model):
     '''Модель поддержки'''
     name = models.CharField(max_length=100, verbose_name='Имя')
@@ -31,7 +33,7 @@ class Support(models.Model):
 
 class BaseModel(models.Model):
     '''Базовая модель'''
-    id =models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True) 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
@@ -71,6 +73,7 @@ class Exchange(BaseModel):
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0, verbose_name='Рейтинг', db_index=True)
     is_active = models.BooleanField(default=True, verbose_name='Активность', db_index=True)
     price = models.IntegerField(default=300, verbose_name='Стоимость размещения обменника')
+    slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
         verbose_name = 'Обменник'
@@ -120,7 +123,12 @@ class Exchange(BaseModel):
                         raise ValueError('Недостаточно средств')
             except Exception as e:
                 raise
+
+        if not self.slug:
+            self.slug = slugify(self.name)
+
         super().save(*args, **kwargs)
+
                         
 
 class BaseVerification(BaseModel):
@@ -265,7 +273,6 @@ class ExchangePair(BaseModel):
         ) 
     
     def clean(self):
-        
         if self.give_rate <= 0 or self.get_rate <= 0:
             raise ValueError("Курсы обмена должны быть положительными значениями.")
 
@@ -350,16 +357,6 @@ class Comment(BaseModel):
         if Comment.objects.filter(exchange=self.exchange, telegram_id=self.telegram_id, is_active=True).exists():
             raise ValueError("Этот пользователь уже оставил комментарий для данного обменника.")
         super().clean()
-        
-        # Проверка на ссылки
-        regex_url = r'(https?://[^\s]+|www\.[^\s]+|t.me\.[^\s]+)'
-        if re.search(regex_url, self.content):
-            raise ValueError("Комментарий не должен содержать ссылки.")
-        
-        # Проверка на номера телефонов
-        regex_phone = r'\b(?:\+?\d{1,3}[-.\s]?)?(\(?\d+\)?[-.\s]?)?\d{2,}[-.\s]?\d{2,}[-.\s]?\d{2,}\b'
-        if re.search(regex_phone, self.content):
-            raise ValueError("Комментарий не должен содержать номера телефонов.")
 
 
 @receiver(post_delete, sender=Comment)

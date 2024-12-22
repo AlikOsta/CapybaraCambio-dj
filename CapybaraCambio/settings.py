@@ -135,7 +135,7 @@ AUTH_USER_MODEL = 'app.CustomUser'
 
 LOGIN_URL = 'app:login'
 
-LOGIN_REDIRECT_URL = 'app:ex_selection'
+LOGIN_REDIRECT_URL = 'app:exchange_selection'
 
 LOGOUT_REDIRECT_URL = 'app:login'
 

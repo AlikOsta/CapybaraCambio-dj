@@ -137,8 +137,8 @@ class ExchangeForm(forms.ModelForm):
         fields = ['name', 'url_operator', 'logo', 'description', 'city', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Название обменника', 'class': 'form-control'}),
-            'url_operator': forms.TextInput(attrs={'placeholder': 'Ссылка на оператора (t.me/NameOperator)', 'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Описание обменника', 'class': 'form-control', 'rows': 3}),
+            'url_operator': forms.TextInput(attrs={'placeholder': 'Ссылка: t.me/NameOperator', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Описание обменника', 'class': 'form-control h-80', 'rows': 6}),
             'city': forms.Select(attrs={'class': 'form-control'}),
             'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),

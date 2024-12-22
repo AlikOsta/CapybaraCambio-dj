@@ -22,3 +22,113 @@ body {
   z-index: -1;
 }
 
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars-outer {
+  position: relative;
+  display: inline-block;
+  color: #808080; 
+  font-size: 20px;
+}
+
+.stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #f6ff5f; 
+}
+
+#add_btn {
+  transition: all 0.3s ease;
+}
+
+#add_btn:hover {
+  background-color: transparent;
+  border-color: #ffc107;
+}
+
+#add_btn:hover i {
+  color: #ffc107 !important;
+}
+
+.modal.fade .modal-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal.show .modal-backdrop {
+  opacity: 0.5;
+}
+
+.modal.fade .modal-dialog {
+  transform: translate(-50%, 100%) !important;
+  transition: transform 0.3s ease-out;
+  margin: 0;
+}
+
+.modal.show .modal-dialog {
+  transform: translate(-50%, 0) !important;
+}
+
+.modal-dialog {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) !important;
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+}
+
+.modal-content {
+  border-radius: 15px 15px 0 0;
+  border-bottom: none;
+}
+
+.error{
+  text-align: center;
+}
+
+
+
+.card {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.input-group-text,
+.form-control {
+  height: 45px;
+}
+
+.h-80{
+  height: 80px;
+}
+
+
+
+.form-control:focus {
+  background-color: #1c1c1c;
+  color: #fff;
+  border-color: #565656;
+  box-shadow: none;
+}
+
+.exchange-cards{
+  margin-top: 1rem;
+}

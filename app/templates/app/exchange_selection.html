@@ -6,16 +6,33 @@
 {% endblock %}
 
 {% block content %}
+
 <main class="container-fluid">
-  <section class="exchange-cards my-4">
-    {% include 'app/includes/card_exchange_include.html' %}
+
+  {% if user_exchanges%}
+  <h1 class="text-center text-white">Ваши обменники:</h1>
+  {% endif %}
+
+  <section class="exchange-cards">
+    <div class="row justify-content-center g-3">
+      {% for exchange in user_exchanges %}
+      <article class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'app:exchange_detail' exchange.slug %}" class="text-decoration-none">
+          {% include 'app/includes/card_exchange_include.html' %}
+        </a>
+      </article>
+      {% empty %}
+      <div class="col-12 text-center">
+        <h1 class="text-center text-white">Создайте свой первый обменник</h1>
+      </div>
+      {% endfor %}
+    </div>
   </section>
 
   <nav>
     {% include 'app/includes/menu_select_include.html' %}
   </nav>
 
-  <!-- Modal -->
   {% include 'app/includes/modals_add_exchange_include.html' %}
 </main>
 {% endblock %}

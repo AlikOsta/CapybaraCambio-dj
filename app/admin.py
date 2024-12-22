@@ -54,10 +54,11 @@ class DeliveryExchangeInline(admin.TabularInline):
 
 @admin.register(Exchange)
 class ExchangeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'rating', 'is_active', 'city', 'has_verified', 'has_active_delivery')
+    list_display = ('name', 'owner', 'rating', 'is_active', 'city', 'slug', 'has_verified', 'has_active_delivery')
     search_fields = ('name', 'owner__username', 'city__name')
     list_filter = ('is_active', 'city')
     readonly_fields = ('created_at', 'updated_at')
+    exclude = ('slug',)
     fieldsets = (
         (None, {
             'fields': ('owner', 'name', 'url_operator', 'logo', 'description', 'city', 'is_active')

@@ -20,12 +20,12 @@ class UserLoginView(LoginView):
     authentication_form = forms.CustomAuthenticationForm 
 
     def get_success_url(self):
-        return reverse_lazy('app:ex_selection')
+        return reverse_lazy('app:exchange_selection')
     
     def dispatch(self, request, *args, **kwargs):
         """Переадресация авторизованных пользователей"""
         if request.user.is_authenticated:
-            return redirect('app:ex_selection')
+            return redirect('app:exchange_selection')
         return super().dispatch(request, *args, **kwargs)  
     
 
@@ -61,24 +61,30 @@ def exchange_selection(request):
     return render(request, 'app/exchange_selection.html', context)
 
 
-class ExchangeDetailView(LoginRequiredMixin, View):
-    template_name = 'app/exchange_detail.html'
+# class ExchangeDetailView(LoginRequiredMixin, View):
+#     template_name = 'app/exchange_detail.html'
 
-    def get(self, request, id):
-        exchange = get_exchange_with_owner(id, request.user)
-        comments = get_active_comments(exchange)
-        exchange_pairs = get_exchange_pairs(exchange)
-        context = get_context_data(exchange, exchange_pairs, comments)
-        return render(request, self.template_name, context)
+#     def get(self, request, id):
+#         exchange = get_exchange_with_owner(id, request.user)
+#         comments = get_active_comments(exchange)
+#         exchange_pairs = get_exchange_pairs(exchange)
+#         context = get_context_data(exchange, exchange_pairs, comments)
+#         return render(request, self.template_name, context)
 
-    def post(self, request, id):
-        exchange = get_exchange_with_owner(id, request.user)
-        form_type = self._determine_form_type(request.POST)
-        return JsonResponse(handle_form(request, form_type, exchange))
+#     def post(self, request, id):
+#         exchange = get_exchange_with_owner(id, request.user)
+#         form_type = self._determine_form_type(request.POST)
+#         return JsonResponse(handle_form(request, form_type, exchange))
 
-    def _determine_form_type(self, post_data):
-        """Определить тип формы"""
-        return post_data.get('form_type', 'exchange_pair')
+#     def _determine_form_type(self, post_data):
+#         """Определить тип формы"""
+#         return post_data.get('form_type', 'exchange_pair')
+
+@login_required
+def exchange_detail(request, exchange_slug):
+    
+
+    return render(request, 'app/exchange_detail.html')
     
 
 

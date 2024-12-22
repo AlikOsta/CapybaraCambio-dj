@@ -1,0 +1,58 @@
+<div class="modal fade" id="editExchangeModal" tabindex="-1" aria-labelledby="editExchangeModalLabel">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content bg-dark text-white border-secondary">
+
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Информация о {{ exchange.name }}</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="exchange">
+                <div class="mb-3">
+                    {{ exchange_form.name }}
+                </div> 
+                <div class="mb-3">
+                    {{ exchange_form.url_operator }}
+                </div>
+                <div class="mb-3">
+                    {{ exchange_form.description }}
+                </div>
+                <div class="mb-3">
+                    {{ exchange_form.city }}
+                </div>
+                <div class="mb-4 text-center">
+                <label for="id_logo" class="d-inline-block position-relative" style="width: 100px; height: 100px; cursor: pointer;">
+                    <div class="rounded-circle border border-2 border-warning w-100 h-100 overflow-hidden">
+                        {% if exchange.logo %}
+                            <img src="{{ exchange.logo.url }}" alt="Текущий логотип" 
+                                class="w-100 h-100 object-fit-cover">
+                        {% endif %}
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 bg-warning rounded-circle p-2">
+                        <i class="bi bi-pencil-fill text-dark"></i>
+                    </div>
+                </label>
+                <input type="file" name="logo" id="id_logo" class="d-none" accept="image/*">
+                </div>
+
+                <div class="form-group toggle-wrapper d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <span class="text-warning">Работает</span>
+                    <label class="switch">
+                        {{ exchange_form.is_active }}
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <p class="error text-danger text-center mb-3"></p>
+
+                <button type="submit" class="btn btn-warning w-100 py-3 fw-bold">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</div>

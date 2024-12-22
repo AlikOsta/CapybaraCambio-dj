@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-  
+
   const form = document.querySelector('form');
   const errorMessage = document.querySelector('.error');
-  const submitButton = form?.querySelector('button[type="submit"]');
+  const submitButton = document.querySelector('#add_ex');
 
   if (submitButton && typeof userBalance !== 'undefined' && typeof exchangePrice !== 'undefined') {
     if (userBalance < exchangePrice) {
       submitButton.disabled = true;
-      errorMessage.textContent = `Ваш баланс: ${userBalance} coin. Не хватает ${exchangePrice - userBalance} coin.`;
+      errorMessage.textContent = `Ваш баланс: ${userBalance} coin. `;
+
     }
   }
 });
@@ -37,5 +38,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const widthPercentage = (ratingValue / 5) * 100;
       starsInner.style.width = `${widthPercentage}%`;
     }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const logoInput = document.querySelector('input[type="file"]');
+  const previewImage = document.querySelector('.image-preview__image');
+  const placeholderIcon = document.querySelector('.placeholder-icon');
+
+  logoInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              previewImage.src = e.target.result;
+              previewImage.classList.remove('d-none');
+              placeholderIcon.classList.add('d-none');
+          }
+          reader.readAsDataURL(file);
+      }
   });
 });

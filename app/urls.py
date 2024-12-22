@@ -9,8 +9,8 @@ app_name = 'app'
 
 urlpatterns = [
 
-    path('exchange-selection/', views.exchange_selection, name='ex_selection'),
-    path('exchange/<uuid:id>/', views.ExchangeDetailView.as_view(), name='ex_detail'),
+    path('exchange-selection/', views.exchange_selection, name='exchange_selection'),
+    path('exchange/<slug:exchange_slug>/', views.exchange_detail, name='exchange_detail'),
     path('login/', views.UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='app:login'), name='logout'),
     

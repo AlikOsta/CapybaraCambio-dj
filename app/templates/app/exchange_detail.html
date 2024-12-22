@@ -8,104 +8,43 @@
 
 {% block content %}
 
-<section class="container">
 
-  <div class="mar_10_10">
-    <div class='exchange-box'>
-      <div class="exchange-info">
-        <div class="exchange-logo">
+<main class="container-fluid">
 
-          <img src="{{ exchange.logo.url }}" class="exchange-img" alt="Логотип обменника"></img>
-          {% if exchange.has_verified %}
-            <img class="icon" src="{{ exchange.verifications.template.logo.url }}" alt="Verification Logo" />
-          {% endif %}
-
-          <div class="rating">
-            <div class="stars-outer">
-                ★★★★★
-                <div class="stars-inner" style="width: calc({{ exchange.rating }} * 20%)">
-                    ★★★★★
-                </div>
-            </div>
-            <span class="rating-number">({{ exchange.rating }})</span>
-          </div>
-        </div>
-
-        <div class="ex_detali">
-          <h2 class='ex_title'>{{ exchange.name }}</h2>
-          <p class="ex_description">Город: {{ exchange.city }}</p>
-        
-          <div>
-            {% if exchange.is_active %}
-            <span class='wr_is_active'>Активен:
-              <div class="is_active"></div>
-            </span>
-            {% else %}
-            <span class='wr_is_active'>Не активен:
-              <div class="no_active"></div>
-            </span>
-            {% endif%}
-          </div>
-          <div class="">
-            <p class="com_date">Работает с {{ exchange.updated_at|date:"d.m.Y" }} </p>
-          </div>
-        </div>
-      </div>
+  <!-- карточка обменника -->
+  <section class=''>
+    <div class="row justify-content-center g-3">
+      <article class="col-12 col-md-8 col-lg-6">
+        {% include 'app/includes/card_exchange_include.html' %}
+      </article>
     </div>
+  </section>
 
-    <section>  
-      <div id="modal-edit-exchange" class="modal-overlay">
-        <div class="modal-content">
-            <button id="close-edit-exchange" type="button" class="close-btn" style="float: right; background: none; border: none; color: rgb(246, 255, 95); font-size: 32px;">
-                &times;
-            </button>
-            
-            <h2>Информация о {{ exchange.name }}</h2>
+  <!-- карточка обменного курса -->
+  <section class="exchange-cards">
+    <div class="row justify-content-center g-3">
+      <article class="col-12 col-md-8 col-lg-6">
+        {% include 'app/includes/card_rate_include.html' %}
+      </article>
+    </div>
+  </section>
+      
 
-          <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <input type="hidden" name="form_type" value="exchange">
-              <div class="">
-                  {{ exchange_form.name }}
-              </div> 
-              <div class="">
-                  {{ exchange_form.url_operator }}
-              </div>
-              <div class="">
-                  {{ exchange_form.description }}
-              </div>
-              <div class="">
-                  {{ exchange_form.city }}
-              </div>
-              <div class=" file-upload">
-                <label for="id_logo" class="custom-file-label">
-                    <div class="image-preview" id="imagePreview">
-                        {% if exchange.logo %}
-                            <img src="{{ exchange.logo.url }}" alt="Текущий логотип" class="image-preview__image">
-                        {% endif %}
-                    </div>
-                    <span class="file-label-text">Ваш логотип</span>
-                </label>
-                <input type="file" name="logo" id="id_logo" class="hidden-file-input" accept="image/*">
-              </div>
+  <nav>
+    {% include 'app/includes/menu_detali_include.html' %}
+  </nav>
 
-              <div class="form-group toggle-wrapper">
-                Работает :
-                <label class="switch">
-                  {{ exchange_form.is_active }}
-                  <span class="slider round"></span>
-                </label>
-              </div>
+  {% include 'app/includes/modals_detail_include.html' %}
+</main>
 
-              <p class="error"></p>
 
-              <button type="submit" class="btn btn-primary">Сохранить</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </div>
 
+
+    {% comment %}
+
+
+
+  {# START exchange_tabs_content_include.html #}
   <div class="mar_10_10">
     <div class="tabs-container">
       <div class="tabs">
@@ -250,7 +189,9 @@
       </div>
     </div>
   </div>
+  {# END exchange_tabs_content_include.html #}
 
+  {# START modals_exchange_include.html #}
   <div class="mar_10_10">
     <div id="modal" class="modal-overlay">
       <div class="modal-content">
@@ -322,7 +263,9 @@
       </div>
     </div>
   </div> 
+  {# END modals_exchange_include.html #}
   
+  {# START modals_verify_include.html #}
   <div class="mar_10_10">  
     <div class="modal-overlay" id="modal-verify">
       <div class="modal-content">
@@ -376,7 +319,9 @@
       </div>
     </div>
   </div>
+    {# END modals_verify_include.html #}
 
+  {# START modals_delivery_include.html #}
   <div class="">
     <div class="delivery-info">
       <div id="modal-edit-delivery" class="modal-overlay">
@@ -448,50 +393,13 @@
         </div>
     </div>
   </div>
+  {# END bottom_nav_include.html #}
 
 </section>
 
-<nav class="bottom-nav">
-  
-  <a href="{% url 'app:ex_selection' %}" class="nav-btn">
-    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF"><path d="M286.69-240v-30.77H589q65.38 0 110.88-45.73t45.5-111.65q0-65.16-45.5-110.5Q654.38-584 589-584H259.38l123.24 123.23-22 22L200-599.38 360.62-760l22 22-123.24 123.23H588q78.08 0 133.12 54.39 55.03 54.38 55.03 132.23 0 77.84-55.03 133Q666.08-240 588-240H286.69Z"/></svg>
-  </a>
-  
-  {% if exchange.has_verified %}
-  <button class="nav-btn" id="show-verify-info-btn">
-    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-      <path d="M280.15-268.92 82.31-466l22.23-22.23 175.61 174.85 27.7-27.7 22.23 22.23-49.93 49.93Zm200 0L283.08-466l22.23-22.23 174.84 174.85 375.54-374.77 22.23 21.46-397.77 397.77Zm-27.69-172.31-22.23-22.23 225.46-225.46 22.23 22.23-225.46 225.46Z"/>
-    </svg>
-  </button>
-  {% else %}
-    <button class="nav-btn" id="verify-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-        <path d="M280.15-268.92 82.31-466l22.23-22.23 175.61 174.85 27.7-27.7 22.23 22.23-49.93 49.93Zm200 0L283.08-466l22.23-22.23 174.84 174.85 375.54-374.77 22.23 21.46-397.77 397.77Zm-27.69-172.31-22.23-22.23 225.46-225.46 22.23 22.23-225.46 225.46Z"/>
-      </svg>
-    </button>
-  {% endif %}
+ {% endcomment %}
 
-  {% if exchange.has_active_delivery %}
-      <button class="nav-btn" id="edit-delivery-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-          <path d="M295.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H111l6.85-30.77h90.46q9.61-26.46 33.42-43.12 23.81-16.65 53.65-16.65 29.85 0 53.66 16.65 23.81 16.66 34.19 43.12H582l91.23-398.23H226l.69-2.23Q229.38-744 238.85-752q9.46-8 22.77-8h450.46l-33.62 144.62h87.31l105.54 141.23-34.39 173.92h-46.15q1.92 41.31-25.96 70.77Q736.92-200 695.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H390.77q1.92 41.31-25.96 70.77Q336.92-200 295.38-200ZM634-425.38h196.54l7.54-41.47-87.7-117.77h-79.76L634-425.38Zm26.38-249.93 12.85-53.92L582-331l12.62-53.69 31.69-139.85 34.07-150.77ZM68.15-444.69l7.31-30.77h179.23l-7.31 30.77H68.15Zm80-139.85 7.31-30.77h219.23l-7.31 30.77H148.15Zm147.23 353.77q27.16 0 45.89-19.23T360-295.38q0-27.16-18.73-45.89T295.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Zm400 0q27.16 0 45.89-19.23T760-295.38q0-27.16-18.73-45.89T695.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Z"/>
-        </svg>
-      </button>
-  {% else %}
-      <button class="nav-btn" id="delivery-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-          <path d="M295.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H111l6.85-30.77h90.46q9.61-26.46 33.42-43.12 23.81-16.65 53.65-16.65 29.85 0 53.66 16.65 23.81 16.66 34.19 43.12H582l91.23-398.23H226l.69-2.23Q229.38-744 238.85-752q9.46-8 22.77-8h450.46l-33.62 144.62h87.31l105.54 141.23-34.39 173.92h-46.15q1.92 41.31-25.96 70.77Q736.92-200 695.38-200q-41.53 0-69.3-29.46-27.77-29.46-25.85-70.77H390.77q1.92 41.31-25.96 70.77Q336.92-200 295.38-200ZM634-425.38h196.54l7.54-41.47-87.7-117.77h-79.76L634-425.38Zm26.38-249.93 12.85-53.92L582-331l12.62-53.69 31.69-139.85 34.07-150.77ZM68.15-444.69l7.31-30.77h179.23l-7.31 30.77H68.15Zm80-139.85 7.31-30.77h219.23l-7.31 30.77H148.15Zm147.23 353.77q27.16 0 45.89-19.23T360-295.38q0-27.16-18.73-45.89T295.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Zm400 0q27.16 0 45.89-19.23T760-295.38q0-27.16-18.73-45.89T695.38-360q-26.15 0-45.38 18.73-19.23 18.73-19.23 45.89 0 26.15 19.23 45.38 19.23 19.23 45.38 19.23Z"/>
-        </svg>
-      </button>
-  {% endif %}
 
-  <button class="nav-btn" id="edit-exchange-btn" type="button">
-    <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px" fill="#FFFFFF">
-      <path d="m413.38-120-16.15-114.46q-22.08-7-48.46-21.69-26.39-14.7-44.69-31.54l-105.7 47.84-66.84-118.61 94.15-69.77q-2-12.08-3.27-25.5t-1.27-25.5q0-11.31 1.27-24.73t3.27-27.81l-94.15-70.54 66.84-116.31 104.93 46.31q20.61-16.84 45.46-31.15 24.85-14.31 47.69-21.08L413.38-840h133.24l16.15 115.23q25.15 9.31 47.81 21.96 22.65 12.66 43.04 30.5l108.76-46.31 66.08 116.31-97.23 71.62q3.54 13.84 4.42 26.5.89 12.65.89 24.19 0 10.77-1.27 23.31t-4.04 27.92l96.46 70.31-66.84 118.61-107.23-48.61q-21.39 18.38-44.2 32.42-22.8 14.04-46.65 20.81L546.62-120H413.38Zm24.93-30.77h82.61L535.69-262q30.69-8 56.35-22.69 25.65-14.69 51.96-39.46l102.92 44.46 40-69.69L696-416.85q4-18.53 6.12-33.5 2.11-14.96 2.11-29.65 0-16.23-2-30.42-2-14.2-6.23-31.2l92.46-69-40-69.69-105.23 44.46q-19.15-21.38-49.69-40.03Q563-694.54 534.92-698l-13.23-111.23h-83.38l-12.46 110.46q-32.47 6.23-58.89 21.31-26.42 15.08-51.73 40.84l-103.69-43.69-40 69.69 90.92 66.7q-4.77 14.69-6.88 30.8-2.12 16.12-2.12 33.89 0 16.23 2.12 31.58 2.11 15.34 6.11 30.8l-90.15 67.47 40 69.69 102.92-43.69q24 24.76 50.81 39.46 26.81 14.69 59.81 22.69l13.23 110.46Zm39.38-233.85q40.16 0 67.77-27.61 27.62-27.62 27.62-67.77 0-40.15-27.62-67.77-27.61-27.61-67.77-27.61-39.38 0-67.38 27.61-28 27.62-28 67.77 0 40.15 28 67.77 28 27.61 67.38 27.61ZM480-480Z"/>
-    </svg>
-  </button>
-
-</nav>
 
   
 {% endblock %} 
